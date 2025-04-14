@@ -40,8 +40,7 @@ export { io };
 io.on('connection', (socket) => {
   console.log('A user connected')
 })
-//-------------------
-
+//------------------
 app.use(express.json())
 app.use('/mana',userrouter)
 app.use('/class',classrouter)
