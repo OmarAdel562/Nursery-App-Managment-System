@@ -23,6 +23,7 @@ import attendancerouter from './src/modules/attendance/attendance.router.js'
 import chatrouter from './src/modules/chat/chat.router.js'
 import http from 'http'
 import {Server} from 'socket.io'
+import pronunciationrouter from './src/modules/pronunciation/pronunciation.router.js'
 
 
 //create server
@@ -61,6 +62,7 @@ app.use('/grade',graderouter)
 app.use('/notification',notificationrouter)
 app.use('/attendance', attendancerouter)
 app.use('/chatbot',chatrouter)
+app.use('/pronunciation',pronunciationrouter)
 
 // global error
 app.use(globalErrorHandling)
