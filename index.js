@@ -19,9 +19,11 @@ import studentrouter from './src/modules/Students/student.router.js'
 import parentrouter from './src/modules/Parents/parent.router.js'
 import teacherrouter from './src/modules/Teachers/teacher.router.js'
 import notificationrouter from './src/modules/notificationes/notification.router.js'
+import attendancerouter from './src/modules/attendance/attendance.router.js'
+import chatrouter from './src/modules/chat/chat.router.js'
 import http from 'http'
 import {Server} from 'socket.io'
-import attendancerouter from './src/modules/attendance/attendance.router.js'
+
 
 //create server
 const app=express()
@@ -58,6 +60,7 @@ app.use('/teacher',teacherrouter)
 app.use('/grade',graderouter)
 app.use('/notification',notificationrouter)
 app.use('/attendance', attendancerouter)
+app.use('/chatbot',chatrouter)
 
 // global error
 app.use(globalErrorHandling)
