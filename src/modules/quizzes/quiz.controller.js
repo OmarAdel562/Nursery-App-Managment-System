@@ -1,4 +1,4 @@
-import { AppErorr } from "../../utils/appError.js"
+import { AppErorr } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 import { Subject } from "../../../db/models/Subject.model.js"
 import { Quiz } from "../../../db/models/Quiz.model.js"

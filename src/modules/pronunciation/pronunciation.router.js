@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { asyncHandler } from "../../utils/appError.js";
+import { asyncHandler } from "../../utils/AppError.js";
  import { isAuthorized } from "../../midderware/authorization.js";
  import { isAuthenticated } from "../../midderware/authentication.js";
  import { roles } from "../../utils/constant/enum.js";

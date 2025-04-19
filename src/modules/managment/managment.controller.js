@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { User } from "../../../db/models/User.model.js"
-import { AppErorr } from "../../utils/appError.js"
+import { AppErorr } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 import cloudinary from '../../utils/cloud.js'
 import { generateToken } from '../../utils/token.js'

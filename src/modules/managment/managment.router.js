@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { asyncHandler } from "../../utils/appError.js";
+import { asyncHandler } from "../../utils/AppError.js";
 import { isValid } from "../../midderware/validation.js";
 import { adduser, Deleteuser, getallusers, getspecificuser, getUserProfiledata, logout, signin, updateuser } from "./managment.controller.js";
 import { adduserVal, Deleteuserval, signinval, updateuserVal } from "./managment.validation.js";
