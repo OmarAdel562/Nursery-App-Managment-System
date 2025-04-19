@@ -5,7 +5,7 @@ import { isValid } from "../../midderware/validation.js";
  import { isAuthenticated } from "../../midderware/authentication.js";
  import { roles } from "../../utils/constant/enum.js";
 import { addParentVal, DeleteParentval, updateParentlVal } from "./parent.validation.js";
-import { addParent, DeleteParent, getallParent, getParentData, getParentNotifications, getspecificParent, getStudentGradesForParent, getStudentReportForParent, getStudentScheduleForParent, updateParent } from "./parent.controller.js";
+import { addParent, DeleteParent, getallParent, getParentData, getParentNotifications, getspecificParent, getStudentAttendanceForParent, getStudentGradesForParent, getStudentReportForParent, getStudentScheduleForParent, updateParent } from "./parent.controller.js";
 
 
 
@@ -32,5 +32,6 @@ parentrouter.get('/student/schedule',isAuthenticated(),isAuthorized([roles.PAREN
 parentrouter.get('/parent/data',isAuthenticated(),isAuthorized([roles.PARENT]),asyncHandler(getParentData))
 //9-get-Parent-notification
 parentrouter.get('/parent/notification',isAuthenticated(),isAuthorized([roles.PARENT]),asyncHandler(getParentNotifications))
-
+//8-get-Student-attendance-for-parent
+parentrouter.get('/student/attendance',isAuthenticated(),isAuthorized([roles.PARENT]) ,asyncHandler(getStudentAttendanceForParent))
 export default parentrouter
