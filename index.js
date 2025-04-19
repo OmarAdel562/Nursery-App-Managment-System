@@ -37,7 +37,7 @@ connectDB()
 const server = http.createServer(app)
 
 // إنشاء Socket.IO
-const io = new Server(server)  // استخدام new Server بدلاً من socketIo(server)
+const io = new Server(server)  
 export { io };
 // إعداد Socket.IO
 io.on('connection', (socket) => {
