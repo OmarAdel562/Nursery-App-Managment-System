@@ -7,7 +7,7 @@ import { Quiz } from "../../../db/models/Quiz.model.js"
 import { Schedule } from "../../../db/models/Schedule.model.js"
 import { Student } from "../../../db/models/Student.model.js"
 import { User } from "../../../db/models/User.model.js"
-import { AppErorr } from "../../utils/apperror.js"
+import { AppErorr } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 
 

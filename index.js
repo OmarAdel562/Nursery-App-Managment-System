@@ -3,7 +3,7 @@ import path from 'path'
 import express from 'express'
 import { connectDB } from './db/connection.js'
 import dotenv from 'dotenv'
-import { globalErrorHandling } from './src/utils/apperror.js'
+import { globalErrorHandling } from './src/utils/AppError.js'
 import userrouter from './src/modules/managment/managment.router.js'
 import classrouter from './src/modules/classes/class.router.js'
 import subjectrouter from './src/modules/subjectes/subject.router.js'
@@ -67,6 +67,6 @@ app.use('/pronunciation',pronunciationrouter)
 // global error
 app.use(globalErrorHandling)
 //listen server
-server.listen(port,()=>{
+server.listen(port,'0.0.0.0',()=>{
     console.log('server is running on port',port);  
 })

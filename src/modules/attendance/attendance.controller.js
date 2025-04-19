@@ -1,6 +1,6 @@
 import { Attendance } from '../../../db/models/Attendance.model.js';
 import { Student } from '../../../db/models/Student.model.js';
-import { AppErorr } from '../../utils/apperror.js';
+import { AppErorr } from '../../utils/AppError.js';
 import { message } from '../../utils/constant/messages.js';
  import axios from 'axios';
 
