@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { asyncHandler } from "../../utils/AppError.js";
+import { asyncHandler } from "../../utils/appError.js";
 import { isValid } from "../../midderware/validation.js";
 import { cloudUpload } from "../../utils/multer-cloud .js";
  import { isAuthorized } from "../../midderware/authorization.js";
