@@ -7,6 +7,7 @@ import { Grade } from "../../../db/models/Grade.model.js"
 import { Report } from "../../../db/models/Report.model.js"
 import { Schedule } from "../../../db/models/Schedule.model.js"
 import { Notification } from "../../../db/models/Notification.model.js"
+import { Attendance } from "../../../db/models/Attendance.model.js"
 
 //-------------------------- Parent----------------------
 //--------------------------1-add Parent------------------------
@@ -122,17 +123,24 @@ export const getStudentGradesForParent = async (req, res, next) => {
     }
     const studentId = parent.studentId._id;
     // get grades
-    const grades = await Grade.find({ studentId })
+    const grade = await Grade.find({ studentId })
         .populate("subjectId", "name") 
         .populate("quizId", "title") 
         .populate("assigmentId", "name") 
         .select("score max_score subjectId quizId assigmentId "); 
 
+    const grades = grade.map(g => ({
+            subject: g.subjectId?.name || null,
+            quiz: g.quizId?.title || null,
+            assignment: g.assigmentId?.name || null,
+            score: g.score,
+            maxScore: g.max_score
+        }));    
+
     return res.status(200).json({
         message:"get successfully",
         success: true,
         data:{student: {
-            _id: studentId,
             name: parent.studentId.userId.name,
         },grades}
     })
@@ -160,7 +168,7 @@ export const getStudentReportForParent = async (req, res, next) => {
         message:"get successfully",
         success: true,
         data:{student: {
-            _id: studentId,
+            
             name: parent.studentId.userId.name,
         },reports}
     })
@@ -191,10 +199,9 @@ export const getStudentScheduleForParent = async (req, res, next) => {
     return res.status(200).json({
         message:"get successfully",
         success: true,
-        data:{student: {
-            _id: studentId,
-            name: parent.studentId.userId.name,
-        },schedule}
+        data:{
+        student: {name: parent.studentId.userId.name},
+        schedule: {image: schedule.image }}
     })
 }
 //----------------9-get-Parent-Data------------------
@@ -284,7 +291,6 @@ export const getStudentAttendanceForParent = async (req, res, next) => {
             name: parent.studentId.userId.name,
         },
         data: {student: {
-            _id: studentId,
             name: parent.studentId.userId.name,
         },attendanceRecords}
     })
