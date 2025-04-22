@@ -131,11 +131,10 @@ export const getStudentGradesForParent = async (req, res, next) => {
     return res.status(200).json({
         message:"get successfully",
         success: true,
-        student: {
+        data:{student: {
             _id: studentId,
             name: parent.studentId.userId.name,
-        },
-        data:grades
+        },grades}
     })
 }
 //-----------------7-get-Student-report-for-parent----------------
@@ -160,11 +159,10 @@ export const getStudentReportForParent = async (req, res, next) => {
     return res.status(200).json({
         message:"get successfully",
         success: true,
-        student: {
+        data:{student: {
             _id: studentId,
             name: parent.studentId.userId.name,
-        },
-        data:reports
+        },reports}
     })
 }
 //-----------------8-get-Student-Schedule-for-parent----------------
@@ -193,11 +191,10 @@ export const getStudentScheduleForParent = async (req, res, next) => {
     return res.status(200).json({
         message:"get successfully",
         success: true,
-        student: {
+        data:{student: {
             _id: studentId,
             name: parent.studentId.userId.name,
-        },
-        data:schedule
+        },schedule}
     })
 }
 //----------------9-get-Parent-Data------------------
@@ -247,7 +244,7 @@ export const getParentNotifications = async (req, res, next) => {
   res.status(200).json({
     message:"get successfully",
     success: true,
-    notifications: notifications.map(notification => ({
+    data: notifications.map(notification => ({
       title: notification.title,
       message: notification.message,
       type: notification.type,
@@ -290,8 +287,11 @@ export const getStudentAttendanceForParent = async (req, res, next) => {
             _id: studentId,
             name: parent.studentId.userId.name,
         },
-        attendance: attendanceRecords
-    });
+        data: {student: {
+            _id: studentId,
+            name: parent.studentId.userId.name,
+        },attendanceRecords}
+    })
 }
 
 
