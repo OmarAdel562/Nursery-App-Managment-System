@@ -27,6 +27,6 @@ userrouter.get('/profile/:userId', asyncHandler(getUserProfiledata))
 //1- signin
 userrouter.post('/signin',isValid(signinval),asyncHandler(signin))
 //1- signin
-userrouter.post('/logout', asyncHandler(logout))
+userrouter.post('/logout',isAuthenticated(), asyncHandler(logout))
 
 export default userrouter
