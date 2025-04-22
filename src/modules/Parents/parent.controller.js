@@ -140,9 +140,8 @@ export const getStudentGradesForParent = async (req, res, next) => {
     return res.status(200).json({
         message:"get successfully",
         success: true,
-        data:{student: {
-            name: parent.studentId.userId.name,
-        },grades}
+        data:{  studentname: parent.studentId.userId.name
+        ,grades}
     })
 }
 //-----------------7-get-Student-report-for-parent----------------
@@ -167,10 +166,9 @@ export const getStudentReportForParent = async (req, res, next) => {
     return res.status(200).json({
         message:"get successfully",
         success: true,
-        data:{student: {
-            
-            name: parent.studentId.userId.name,
-        },reports}
+        data:{
+        studentname: parent.studentId.userId.name
+        ,reports}
     })
 }
 //-----------------8-get-Student-Schedule-for-parent----------------
@@ -286,13 +284,8 @@ export const getStudentAttendanceForParent = async (req, res, next) => {
     return res.status(200).json({
         message:"get successfully",
         success: true,
-        student: {
-            _id: studentId,
-            name: parent.studentId.userId.name,
-        },
-        data: {student: {
-            name: parent.studentId.userId.name,
-        },attendanceRecords}
+        data: {studentname:parent.studentId.userId.name
+        ,attendanceRecords}
     })
 }
 
