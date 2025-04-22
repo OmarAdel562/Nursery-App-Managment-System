@@ -23,15 +23,15 @@ parentrouter.get('/:parentId',isAuthenticated(),isAuthorized([roles.MANAGMENT]),
 //5-delete specific Parent
 parentrouter.delete('/:parentId',isAuthenticated(),isAuthorized([roles.MANAGMENT]),isValid(DeleteParentval), asyncHandler(DeleteParent))
 //6-get-Student-Grades-for-parent
-parentrouter.get('/student/grades',isAuthenticated(),isAuthorized([roles.PARENT]) ,asyncHandler(getStudentGradesForParent))
+parentrouter.get('/parent/student/grades',isAuthenticated(),isAuthorized([roles.PARENT]) ,asyncHandler(getStudentGradesForParent))
 //7-get-Student-report-for-parent
-parentrouter.get('/student/report',isAuthenticated(),isAuthorized([roles.PARENT]) ,asyncHandler(getStudentReportForParent))
+parentrouter.get('/parent/student/report',isAuthenticated(),isAuthorized([roles.PARENT]) ,asyncHandler(getStudentReportForParent))
 //8-get-Student-Schedule-for-parent
-parentrouter.get('/student/schedule',isAuthenticated(),isAuthorized([roles.PARENT]) ,asyncHandler(getStudentScheduleForParent))
+parentrouter.get('/parent/student/schedule',isAuthenticated(),isAuthorized([roles.PARENT]) ,asyncHandler(getStudentScheduleForParent))
 //9-get-Parent-profiledata
 parentrouter.get('/parent/data',isAuthenticated(),isAuthorized([roles.PARENT]),asyncHandler(getParentData))
 //9-get-Parent-notification
 parentrouter.get('/parent/notification',isAuthenticated(),isAuthorized([roles.PARENT]),asyncHandler(getParentNotifications))
 //8-get-Student-attendance-for-parent
-parentrouter.get('/student/attendance',isAuthenticated(),isAuthorized([roles.PARENT]) ,asyncHandler(getStudentAttendanceForParent))
+parentrouter.get('/parent/student/attendance',isAuthenticated(),isAuthorized([roles.PARENT]) ,asyncHandler(getStudentAttendanceForParent))
 export default parentrouter
