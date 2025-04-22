@@ -158,12 +158,12 @@ export const signin=async(req, res,next) =>{
     //check existance
     const userExist=await User.findOne({email})
     if(!userExist){
-  return next (new AppErorr(message.user.invalidCreadentials,400))
+        return res.status(400).json({ message: "Invalid credentials", success: false, data: {}})
     }
     //check password
     const match= bcrypt.compareSync(password, userExist.password)
     if(!match){
-       return next (new AppErorr(message.user.invalidCreadentials,400))
+        return res.status(400).json({ message: "Invalid credentials", success: false, data: {}})
     }
     //generate token
     const token =generateToken({payload:{_id:userExist._id ,email}})
