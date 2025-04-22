@@ -117,7 +117,10 @@ export const DeleteParent= async (req,res,next) => {
 export const getStudentGradesForParent = async (req, res, next) => {
     const parentId = req.authUser._id
     // check parent existance
-    const parent = await Parent.findOne({ userId: parentId }).populate("studentId");
+    const parent = await Parent.findOne({ userId: parentId }).populate({
+        path: "studentId",
+        populate: { path: "userId", select: "name" }
+    })
     if (!parent) {
         return next(new AppErorr(message.parent.notFound, 404));
     }
