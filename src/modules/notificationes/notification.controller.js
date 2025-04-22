@@ -20,7 +20,7 @@ export const CreateNotification = async (req, res) => {
       receiverParent: parent?._id,
       type
     })
-    creatednotif=await newNotification.save()
+    await newNotification.save()
     io.emit(`student-${student._id}`, { title, message, type });
     if (parent?._id) {
       io.emit(`parent-${parent._id}`, { title, message, type });
