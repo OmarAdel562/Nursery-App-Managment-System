@@ -264,20 +264,23 @@ export const getParentNotifications = async (req, res, next) => {
 //-----------------10-get-Student-attendance-for-parent----------------
 export const getStudentAttendanceForParent = async (req, res, next) => {
     const parentId = req.authUser._id;
+
     // Check if the parent exists
     const parent = await Parent.findOne({ userId: parentId }).populate({
         path: "studentId",
         populate: { path: "userId", select: "name" }
-    })
+    });
+
     if (!parent) {
         return next(new AppErorr(message.parent.notFound, 404));
     }
-    const studentId = parent.studentId.userId._id;
+
+    const studentId = parent.studentId._id;
+
     // Fetch attendance for the student
     const attendanceRecords = await Attendance.find({ studentId })
-        .populate('studentId', 'userId')
         .select('date status')
-        .sort({ date: -1 }); // Sort by date (most recent first)
+        .sort({ date: -1 });
 
     if (!attendanceRecords || attendanceRecords.length === 0) {
         return next(new AppErorr(message.attendance.notFound, 404));
@@ -285,11 +288,13 @@ export const getStudentAttendanceForParent = async (req, res, next) => {
 
     // Return the attendance data
     return res.status(200).json({
-        message:"get successfully",
+        message: "get successfully",
         success: true,
-        data: {studentname:parent.studentId.userId.name
-        ,attendanceRecords}
-    })
+        data: {
+            studentname: parent.studentId.userId.name,
+            attendanceRecords
+        }
+    });
 }
 
 
