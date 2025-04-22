@@ -172,6 +172,7 @@ export const signin=async(req, res,next) =>{
     return res.status(200).json({
        message:"login successfully",
        success:true,
+       data:{},
        token})
 }
 //--------------2-logout------
