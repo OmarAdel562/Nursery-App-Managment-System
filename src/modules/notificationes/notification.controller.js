@@ -26,6 +26,6 @@ export const CreateNotification = async (req, res) => {
       io.emit(`parent-${parent._id}`, { title, message, type });
     }
   }
-  return res.status(201).json({ success:true, message: "Notification sent successfully to all students and parents" });
+  return res.status(201).json({  message: "Notification sent successfully to all students and parents" ,success:true,data:newNotification});
 }
 
