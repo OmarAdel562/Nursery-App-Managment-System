@@ -4,8 +4,6 @@ import { AppErorr } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 import cloudinary from '../../utils/cloud.js'
 import { generateToken } from '../../utils/token.js'
-//import { sendEmail } from '../../utils/email.js'
-//import { userstatus } from '../../utils/constant/enum.js'
 
 //-------------------------- users----------------------
 //--------------------------1-add user------------------------
@@ -15,7 +13,7 @@ export const adduser=async(req,res,next) =>{
      //check existance
      const userExist=await User.findOne({$or:[{email},{phone}]})
      if(userExist){
-        return next( new AppErorr(message.user.alreadyExist,409))
+        return res.status(409).json({ message:message.user.alreadyExist, success: false, data: {}})
      }
     //prepare data
     //upload image
@@ -44,35 +42,28 @@ export const adduser=async(req,res,next) =>{
      }
     //  //generate token
      const token= generateToken({payload:{email,_id:createdUser._id}})
-     //send Email
-     //await sendEmail({to:email,subject:"verify your account",html:`<p> Click on link to verify account<a href="${req.protocol}://${req.headers.host}/managment/verify/${token}"> link</a> </p>`})
      //send response
-
      return res.status(201).json({message:message.user.createsuccessfully,
         success:true,
         data:createdUser})
-
 }
 //---------------2-update user---------------
 export const updateuser= async (req,res,next) => {
         //get data from req
         let {name , email, phone, password,DOB,gander,age,role}=req.body
         const { userId } =req.params
-        
-    
         //check existance
         const userExist= await User.findById(userId)
         if(!userExist){
-            return next( new AppErorr(message.user.notFound,404))
+            return res.status(404).json({ message:message.user.notFound, success: false, data: {}})
         }
         //check email existance
         const emailExist= await User.findOne({email,_id:{$ne:userId }})
         if(emailExist){
-            return next( new AppErorr(message.user.alreadyExist,409))
+            return res.status(409).json({ message:message.user.alreadyExist, success: false, data: {}})
         }
         // prepare data
-        if(name){
-            
+        if(name){ 
             userExist.name=name,
             userExist.email=email,
             userExist.password=password,
@@ -80,15 +71,10 @@ export const updateuser= async (req,res,next) => {
             userExist.DOB=DOB,
             userExist.gander=gander,
             userExist.age=age,
-            userExist.role=role
-
-            
+            userExist.role=role 
         }
         //upload file
         if(req.file){
-    
-        //delete old image
-          //  await cloudinary.uploader.destroy(brandExist.logo.public_id)
         //upload new image
            const {secure_url,public_id}= await cloudinary.uploader.upload(req.file.path,{
                 public_id:userExist.profilePic.public_id
@@ -112,7 +98,7 @@ export const updateuser= async (req,res,next) => {
 export const getallusers= async (req,res,next) => {
     //get data from req
     const users=await User.find()
-    res.status(200).json({success:true,data:users})      
+    res.status(200).json({message:"get successfully",success:true,data:users})      
 }
 //---------------4-get specificuser-------------------------
 export const getspecificuser= async (req,res,next) => {
@@ -120,7 +106,7 @@ export const getspecificuser= async (req,res,next) => {
     const { userId } =req.params
     const user=await User.findById(userId)
     user?
-    res.status(200).json({ success:true,data:user})
+    res.status(200).json({ message:"get successfully",success:true,data:user})
         : next (new AppErorr(message.user.notFound,404))
 }
 //-------------5-deleteuser-------------------------------------
@@ -134,22 +120,11 @@ export const Deleteuser= async (req,res,next) => {
        //send response
        return res.status(200).json({
         message:message.user.deletesuccessfully,
-        success:true
+        success:true,
+        data:{}
     })
-    }
-//-----------6-get profile data for user
-export const getUserProfiledata = async (req, res, next) => {
-        const { userId } = req.params;
-    
-        // check userexist
-        const user = await User.findById(userId).select("name gander email phone profilePic")
-        if (!user) {
-            return next(new AppErorr(message.user.notFound, 404));
-        }
-        //   send response 
-        res.status(200).json({success: true, data: user})
-    }
-//-----------------------------------------------------------------------------------------------------
+}
+//------------------------------------------------------------------------------------------
 //------------------------------------------signin and logout------------------------------------------
 //------------1-signin---
 export const signin=async(req, res,next) =>{

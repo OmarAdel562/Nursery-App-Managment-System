@@ -86,7 +86,7 @@ export const updateParent= async (req,res,next) => {
 export const getallParent= async (req,res,next) => {
     //get data from req
     const parentes=await Parent.find().populate("userId", "name").populate("studentId", "name")
-    res.status(200).json({success:true,data:parentes})      
+    res.status(200).json({message:"get successfully", success:true,data:parentes})      
 }
 //---------------4-get specific Parent-------------------------
 export const getspecificParent= async (req,res,next) => {
@@ -94,7 +94,7 @@ export const getspecificParent= async (req,res,next) => {
     const { parentId } =req.params
     const parent=await Parent.findById(parentId).populate("userId", "name")
     parent?
-    res.status(200).json({ success:true,data:parent})
+    res.status(200).json({message:"get successfully", success:true,data:parent})
         : next (new AppErorr(message.parent.notFound,404))
 }
 //-------------5-delete Parent-------------------------------------
@@ -108,7 +108,8 @@ export const DeleteParent= async (req,res,next) => {
        //send response
        return res.status(200).json({
         message:message.parent.deletesuccessfully,
-        success:true
+        success:true,
+        data:{}
     })
 }
 //-----------------6-get-Student-Grades-for-parent----------------
@@ -128,6 +129,7 @@ export const getStudentGradesForParent = async (req, res, next) => {
         .select("score max_score subjectId quizId assigmentId "); 
 
     return res.status(200).json({
+        message:"get successfully",
         success: true,
         student: {
             _id: studentId,
@@ -156,6 +158,7 @@ export const getStudentReportForParent = async (req, res, next) => {
     .select("report ")
 
     return res.status(200).json({
+        message:"get successfully",
         success: true,
         student: {
             _id: studentId,
@@ -188,6 +191,7 @@ export const getStudentScheduleForParent = async (req, res, next) => {
     }
 
     return res.status(200).json({
+        message:"get successfully",
         success: true,
         student: {
             _id: studentId,
@@ -208,6 +212,7 @@ export const getParentData = async (req, res, next) => {
     }
      //send response
     return res.status(200).json({
+        message:"get successfully",
         success: true,
         data: {
             profilePic: parent.userId.profilePic?.secure_url || null,
@@ -240,6 +245,7 @@ export const getParentNotifications = async (req, res, next) => {
   
     // send response
   res.status(200).json({
+    message:"get successfully",
     success: true,
     notifications: notifications.map(notification => ({
       title: notification.title,
@@ -250,7 +256,7 @@ export const getParentNotifications = async (req, res, next) => {
     })),
   })
 }
-//-----------------8-get-Student-attendance-for-parent----------------
+//-----------------10-get-Student-attendance-for-parent----------------
 export const getStudentAttendanceForParent = async (req, res, next) => {
     const parentId = req.authUser._id;
 
@@ -278,6 +284,7 @@ export const getStudentAttendanceForParent = async (req, res, next) => {
 
     // Return the attendance data
     return res.status(200).json({
+        message:"get successfully",
         success: true,
         student: {
             _id: studentId,
@@ -285,7 +292,7 @@ export const getStudentAttendanceForParent = async (req, res, next) => {
         },
         attendance: attendanceRecords
     });
-};
+}
 
 
 
