@@ -279,20 +279,17 @@ export const getStudentAttendanceForParent = async (req, res, next) => {
 
     // Fetch attendance for the student
     const attendanceRecords = await Attendance.find({ studentId })
+        .populate('studentId', 'userId')
         .select('date status')
         .sort({ date: -1 });
 
-    if (!attendanceRecords || attendanceRecords.length === 0) {
-        return next(new AppErorr(message.attendance.notFound, 404));
-    }
-
-    // Return the attendance data
+    // Always return response even if no records
     return res.status(200).json({
         message: "get successfully",
         success: true,
         data: {
             studentname: parent.studentId.userId.name,
-            attendanceRecords
+            attendanceRecords 
         }
     });
 }
