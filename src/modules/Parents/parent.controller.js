@@ -135,19 +135,19 @@ export const getStudentGradesForParent = async (req, res, next) => {
             assignment: g.assigmentId?.name || null,
             score: g.score,
             maxScore: g.max_score
-        }));    
+        }));   
 
     return res.status(200).json({
         message:"get successfully",
         success: true,
-        data:{  studentname: parent.studentId.userId.name
-        ,grades}
+        data:{  
+        studentname: parent.studentId.userId.name,
+        grades}
     })
 }
 //-----------------7-get-Student-report-for-parent----------------
 export const getStudentReportForParent = async (req, res, next) => {
     const parentId = req.authUser._id
-
     // check parent existance
     const parent = await Parent.findOne({ userId: parentId }).populate({
         path: "studentId",
