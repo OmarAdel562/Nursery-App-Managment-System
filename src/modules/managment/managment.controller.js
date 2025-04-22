@@ -179,8 +179,10 @@ export const signin=async(req, res,next) =>{
 export const logout = async (req, res, next) => {
     res.clearCookie("token")
     res.status(200).json({
+        message: "user logout successfully" ,
         success: true,
-        message: "user logout successfully" })
+        data:{}
+    })
 }
 
 
