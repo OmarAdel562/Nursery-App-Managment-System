@@ -61,7 +61,7 @@ export const updateStudent= async (req,res,next) => {
             return next( new AppErorr(message.student.notFound,404))
         }
         //check userexistance
-          const userExist=await User.findById(userId)
+          const userExist=await User.findOne(userId)
            if(!userExist){
             return next( new AppErorr(message.user.notFound,404))
           }

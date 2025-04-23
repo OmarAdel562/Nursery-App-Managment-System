@@ -29,9 +29,7 @@ export const addParent=async(req,res,next) =>{
      if(!studentExist){
         return next( new AppErorr(message.student.notFound,404))
      }
-     
     //prepare data
-    
      const parent= new Parent({
         userId,
         studentId,
