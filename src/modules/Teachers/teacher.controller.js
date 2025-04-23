@@ -147,7 +147,7 @@ export const getTeacherSchedule = async (req, res, next) => {
     }
     // send response
     res.status(200).json({ message:"get successfully",success: true,
-        data: {teacherSchedule: {image: studentSchedule.image }}})
+        data: {teacherSchedule: {image: teacherSchedule.image }}})
 }
 //------------------8-get-Class-For-Teacher--------
 export const getClassForTeacher = async (req, res, next) => {
@@ -188,7 +188,6 @@ export const getTeacherSubjects = async (req, res, next) => {
         return next(new AppErorr(message.teacher.notFound, 404))
         }
     const subjects = teacher.subjectes.map(subject => ({
-        _id: subject._id,
         name: subject.name
     }))
     // send response
