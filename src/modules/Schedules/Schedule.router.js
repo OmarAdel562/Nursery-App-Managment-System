@@ -6,7 +6,7 @@ import { cloudUploadd } from "../../utils/multer-cloud .js";
  import { isAuthenticated } from "../../midderware/authentication.js";
  import { roles } from "../../utils/constant/enum.js";
 import { addScheduleVal, DeleteScheduleval, updateScheduleVal } from "./Schedule.validation.js";
-import { addSchedule, DeleteSchedule, getallSchedules, getspecificSchedule, getspecificstudentSchedule, updateSchedule } from "./Schedule.controller.js";
+import { addSchedule, DeleteSchedule, getallSchedules, getspecificSchedule, updateSchedule } from "./Schedule.controller.js";
 
 
 const schedulerouter=Router()
@@ -22,7 +22,6 @@ schedulerouter.get('/',isAuthenticated(),isAuthorized([roles.MANAGMENT]), asyncH
 schedulerouter.get('/:scheduleId',isAuthenticated(),isAuthorized([roles.MANAGMENT]), asyncHandler(getspecificSchedule))
 //5-delete specific Schedule
 schedulerouter.delete('/:scheduleId',isAuthenticated(),isAuthorized([roles.MANAGMENT]),isValid(DeleteScheduleval), asyncHandler(DeleteSchedule))
-//6- getspecificescheduleofuser
-schedulerouter.get('/user/:userId',asyncHandler(getspecificstudentSchedule))
+
 
 export default schedulerouter

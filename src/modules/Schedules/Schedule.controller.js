@@ -80,16 +80,16 @@ export const updateSchedule= async (req,res,next) => {
 //---------------------3-getall Schedule----------------------------     
 export const getallSchedules= async (req,res,next) => {
     //get data from req
-    const schedules=await Schedule.find()
-    res.status(200).json({success:true,data:schedules})      
+    const schedules=await Schedule.find().select("userId image")
+    res.status(200).json({message:"get successfully",success:true,data:schedules})      
 }
 //---------------4-get specific Schedule---------------------------
 export const getspecificSchedule= async (req,res,next) => {
     //get data from req
     const { scheduleId } =req.params
-    const schedule=await Schedule.findById(scheduleId)
+    const schedule=await Schedule.findById(scheduleId).select("userId image")
     schedule?
-    res.status(200).json({ success:true,data:schedule})
+    res.status(200).json({message:"get successfully", success:true,data:schedule})
         : next (new AppErorr(message.schedule.notFound,404))
 }
 //-------------5-delete Schedule-------------------------------------
@@ -106,13 +106,5 @@ export const DeleteSchedule= async (req,res,next) => {
         success:true
     })
 }
-//-----------------------6-get specific user Schedule-------------
-export const getspecificstudentSchedule = async (req, res,next) => {
-    const { userId } = req.params;
-  const schedule = await Schedule.find({ userId })
-  if (schedule.length === 0) {
-    return next( new AppErorr(message.schedule.notFound,404))
-  }
-       res.status(200).json({success:true,data:schedule}) 
-} 
+
 
