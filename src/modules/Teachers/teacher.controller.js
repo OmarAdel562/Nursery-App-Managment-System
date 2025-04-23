@@ -84,7 +84,7 @@ import { message } from "../../utils/constant/messages.js"
    //---------------------3-getall Teacher----------------------------
     export const getallTeacher= async (req,res,next) => {
     //get data from req
-    const teacher=await Teacher.find().populate("userId","name")
+    const teacher=await Teacher.find().populate("userId","name").select("name")
     res.status(200).json({success:true,data:teacher})      
 }
    //---------------4-get specific Teacher-------------------------
@@ -100,7 +100,7 @@ import { message } from "../../utils/constant/messages.js"
   export const DeleteTeacher= async (req,res,next) => {
     //get data from req
     const { teacherId } =req.params
-        const teacher = await Teacher.findByIdAndDelete(teacherId);
+        const teacher = await Teacher.findByIdAndDelete(teacherId).select("name")
         if (!teacher) {
           return next(new AppErorr(message.teacher.notFound, 404));
         }
@@ -140,34 +140,43 @@ export const getTeacherSchedule = async (req, res, next) => {
     if (!teacher) {
         return next(new AppErorr(message.teacher.notFound, 404))
     }
-    const teacherSchedule = await Schedule.findOne({ userId: teacherId });
+    const teacherSchedule = await Schedule.findOne({ userId: teacherId }).select("image")
 
     if (!teacherSchedule) {
         return next(new AppErorr(message.schedule.notFound, 404))
     }
     // send response
-    res.status(200).json({ success: true,data: teacherSchedule,})
+    res.status(200).json({ message:"get successfully",success: true,
+        data: {teacherSchedule: {image: studentSchedule.image }}})
 }
 //------------------8-get-Class-For-Teacher--------
 export const getClassForTeacher = async (req, res, next) => {
     const teacherId = req.authUser._id;
-    // check teacher existance
-    const teacher = await Teacher.findOne({ userId: teacherId }).populate('classId')
-    if (!teacher) {
-        return next(new AppErorr(message.teacher.notFound, 404))
-    }
-    const classId = teacher.classId._id
+// check teacher existance
+const teacher = await Teacher.findOne({ userId: teacherId }).populate('classId');
+if (!teacher) {
+  return next(new AppErorr(message.teacher.notFound, 404));
+}
 
-    // get student
-    const studentsInClass = await Student.find({ classId })
-        .populate("userId", "name ")
-        .select("userId classId")
+const classId = teacher.classId._id;
 
-    if (studentsInClass.length === 0) {
-        return next(new AppErorr(message.student.notFound, 404))
-    }
-    // send response
-    res.status(200).json({ success: true, class: { _id: classId, name: teacher.classId.name, }, students: studentsInClass, })
+// get students in class
+const studentsInClass = await Student.find({ classId })
+  .populate("userId", "name");
+
+if (studentsInClass.length === 0) {
+  return next(new AppErorr(message.student.notFound, 404));
+}
+
+// extract student names
+const studentNames = studentsInClass.map((student) => student.userId?.name).filter(Boolean);
+
+// send response
+res.status(200).json({
+  success: true,
+  className: teacher.classId.name,
+  students: studentNames,
+})
 }
 //--------------9-get-Teacher-Subjects------------
 export const getTeacherSubjects = async (req, res, next) => {
