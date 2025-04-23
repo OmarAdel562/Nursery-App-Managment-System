@@ -50,8 +50,6 @@ export const updateParent= async (req,res,next) => {
         //get data from req
         let {userId , studentId }=req.body
         const { parentId } =req.params
-        
-    
         //check existance
         const parentExist= await Parent.findById(parentId)
         if(!parentExist){
@@ -64,7 +62,6 @@ export const updateParent= async (req,res,next) => {
           }
         // prepare data
         if(userId){[
-            
             parentExist.userId=userId,
             parentExist.studentId=studentId, 
         ]}
@@ -84,14 +81,14 @@ export const updateParent= async (req,res,next) => {
 //---------------------3-getall Parent----------------------------    
 export const getallParent= async (req,res,next) => {
     //get data from req
-    const parentes=await Parent.find().populate("userId", "name").populate("studentId", "name")
+    const parentes=await Parent.find().select("userId", "name").select("studentId", "name")
     res.status(200).json({message:"get successfully", success:true,data:parentes})      
 }
 //---------------4-get specific Parent-------------------------
 export const getspecificParent= async (req,res,next) => {
     //get data from req
     const { parentId } =req.params
-    const parent=await Parent.findById(parentId).populate("userId", "name")
+    const parent=await Parent.findById(parentId).select("userId", "name")
     parent?
     res.status(200).json({message:"get successfully", success:true,data:parent})
         : next (new AppErorr(message.parent.notFound,404))
