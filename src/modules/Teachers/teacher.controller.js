@@ -85,15 +85,15 @@ import { message } from "../../utils/constant/messages.js"
     export const getallTeacher= async (req,res,next) => {
     //get data from req
     const teacher=await Teacher.find().populate("userId","name").select("name")
-    res.status(200).json({success:true,data:teacher})      
+    res.status(200).json({message:"get successfully",success:true,data:teacher})      
 }
    //---------------4-get specific Teacher-------------------------
    export const getspecificTeacher= async (req,res,next) => {
     //get data from req
     const { teacherId } =req.params
-    const teacher=await Teacher.findById(teacherId).populate("userId","name")
+    const teacher=await Teacher.findById(teacherId).populate("userId","name").select("name")
     teacher?
-    res.status(200).json({ success:true,data:teacher})
+    res.status(200).json({message:"get successfully", success:true,data:teacher})
         : next (new AppErorr(message.teacher.notFound,404))
 }
    //-------------5-delete Teacher-------------------------------------
@@ -173,10 +173,11 @@ const studentNames = studentsInClass.map((student) => student.userId?.name).filt
 
 // send response
 res.status(200).json({
+    message:"get successfully",
   success: true,
-  className: teacher.classId.name,
+  data:{className: teacher.classId.name,
   students: studentNames,
-})
+}})
 }
 //--------------9-get-Teacher-Subjects------------
 export const getTeacherSubjects = async (req, res, next) => {
@@ -191,7 +192,7 @@ export const getTeacherSubjects = async (req, res, next) => {
         name: subject.name
     }))
     // send response
-    return res.status(200).json({ success: true,data:subjects})
+    return res.status(200).json({message:"get successfully", success: true,data:subjects})
 }
 //----------------10-getQuizGradesForClass-----------
 export const getQuizGradesForClass = async (req, res, next) => {
@@ -217,12 +218,13 @@ export const getQuizGradesForClass = async (req, res, next) => {
   
     //  return the quiz grades and student 
     return res.status(200).json({
+      message:"get successfully",
       success: true,
       quiz: quiz.title,
-      classId,
+      data:{classId,
       grades: quizAttempts.map(attempt => ({
         studentName: attempt.studentId.name,
         score: attempt.score,
       })),
-    })
+ } })
 }
