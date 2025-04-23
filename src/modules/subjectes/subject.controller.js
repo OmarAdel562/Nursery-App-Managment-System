@@ -68,7 +68,7 @@ export const updatesubject= async (req,res,next) => {
 export const getallsubjectes= async (req,res,next) => {
     //get data from req
     const subject=await Subject.find()
-    res.status(200).json({success:true,data:subject})      
+    res.status(200).json({message:"get successfully",success:true,data:subject})      
 }
 //---------------4-get specific subject-------------------------
 export const getspecificsubject= async (req,res,next) => {
@@ -80,9 +80,9 @@ export const getspecificsubject= async (req,res,next) => {
         {path:"links"},
         {path:"quiz"},
         {path:"grade"},
-    ]);
+    ])
     subject?
-    res.status(200).json({ success:true,data:subject})
+    res.status(200).json({ message:"get successfully",success:true,data:subject})
     : next (new AppErorr(message.subject.notFound,404))
 }
 //-------------5-deletesubject-------------------------------------
