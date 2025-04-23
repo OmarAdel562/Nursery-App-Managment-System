@@ -85,20 +85,27 @@ export const updateStudent= async (req,res,next) => {
             data:updatestudent
         })
 }
-//---------------------3-getall Student----------------------------
-        
+//---------------------3-getall Student----------------------------    
 export const getallStudent= async (req,res,next) => {
     //get data from req
     const student=await Student.find()
-    res.status(200).json({success:true,data:student})      
+    .populate("userId","name")
+    .populate("classId","name")
+    .populate("subjectes","name")
+    .select("_id userId classId subjectes ")
+    res.status(200).json({message:"get successfully", success:true,data:student})      
 }
 //---------------4-get specific Student-------------------------
 export const getspecificStudent= async (req,res,next) => {
     //get data from req
     const { studentId } =req.params
     const student=await Student.findById(studentId)
+    .populate("userId","name")
+    .populate("classId","name")
+    .populate("subjectes","name")
+    .select("_id userId classId subjectes ")
     student?
-    res.status(200).json({ success:true,data:student})
+    res.status(200).json({ message:"get successfully", success:true,data:student})
         : next (new AppErorr(message.student.notFound,404))
 }
 //-------------5-delete Student-------------------------------------
@@ -128,6 +135,7 @@ export const getStudentData = async (req, res, next) => {
     }
      //send response
     res.status(200).json({
+        message:"get successfully",
         success: true,
         data: {
           profilePic: student.userId.profilePic?.secure_url || null,
@@ -140,13 +148,14 @@ export const getStudentData = async (req, res, next) => {
 //----------------7-get-Student-Schedule--------------
 export const getStudentSchedule = async (req, res, next) => {
     const studentId = req.authUser._id    
-    const studentSchedule = await Schedule.findOne({ userId: studentId })
+    const studentSchedule = await Schedule.findOne({ userId: studentId }).select("image")
     // check schedule existance
     if (!studentSchedule) {
         return next(new AppErorr(message.schedule.notFound, 404))
     }
      //send response
     res.status(200).json({
+      message:"get successfully",
         success: true,
         data: studentSchedule,
     })
@@ -169,7 +178,7 @@ export const getStudentGrades = async (req, res, next) => {
         return next(new AppErorr(message.grade.notFound, 404));
     }
     // send response
-    res.status(200).json({ success: true, student: { _id: student._id, name: student.userId.name,}, data: grades  })
+    res.status(200).json({ message:"get successfully",success: true, studentname: student.userId.name, data: grades  })
 }
 //------------------9-get-student-subjectes--------------
 export const getStudentSubjects = async (req, res, next) => {
@@ -182,16 +191,13 @@ export const getStudentSubjects = async (req, res, next) => {
     }
     // send response
     return res.status(200).json({
+      message:"get successfully",
         success: true,
-        student: {
-            _id: studentId,
-            name: student.userId.name,
-        },
+        data:{studentname: student.userId.name,
         subjects: student.subjectes.map(subject => ({
-            _id: subject._id,
             name: subject.name,  
-        })),
-    })
+        }))
+    }})
 }
 //------------10-get-notification-for-student-----------
 export const getStudentNotifications = async (req, res, next) => {
@@ -213,9 +219,9 @@ export const getStudentNotifications = async (req, res, next) => {
   if (notifications.length === 0) {
     return next(new AppErorr(message.notification.notFound, 404))
   }
-
   // send response
   res.status(200).json({
+    message:"get successfully",
     success: true,
     notifications: notifications.map(notification => ({
       title: notification.title,
@@ -271,13 +277,15 @@ export const getStudentGradesInSubject = async (req, res, next) => {
   const grades = await Grade.find({ studentId: student._id, subjectId })
     .populate("quizId", "title")
     .populate("assigmentId", "name")
+    .select("title name")
 
   if (!grades.length) {
     return next(new AppErorr(message.grade.notFound, 404))
   }
   return res.status(200).json({
+    message:"get successfully",
     success: true,
     data: grades,
-  });
+  })
 }
   
