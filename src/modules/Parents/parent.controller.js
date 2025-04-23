@@ -81,14 +81,14 @@ export const updateParent= async (req,res,next) => {
 //---------------------3-getall Parent----------------------------    
 export const getallParent= async (req,res,next) => {
     //get data from req
-    const parentes=await Parent.find().select("userId name").select("studentId name")
+    const parentes=await Parent.find().populate("userId", "name").populate("studentId", "name").select("userId name studentId name")
     res.status(200).json({message:"get successfully", success:true,data:parentes})      
 }
 //---------------4-get specific Parent-------------------------
 export const getspecificParent= async (req,res,next) => {
     //get data from req
     const { parentId } =req.params
-    const parent=await Parent.findById(parentId).select("userId name")
+    const parent=await Parent.findById(parentId).populate("userId", "name").select(" userId name")
     parent?
     res.status(200).json({message:"get successfully", success:true,data:parent})
         : next (new AppErorr(message.parent.notFound,404))
