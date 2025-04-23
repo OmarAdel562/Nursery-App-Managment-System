@@ -163,22 +163,61 @@ export const getStudentSchedule = async (req, res, next) => {
 //------------------8-get-student-grades----------------
 export const getStudentGrades = async (req, res, next) => {
     const studentId = req.authUser._id;
-    // اcheck student existance
-    const student = await Student.findOne({ userId: studentId });
+    // check student existance
+    const student = await Student.findOne({ userId: studentId }).populate("userId", "name");
     if (!student) {
         return next(new AppErorr(message.student.notFound, 404));
     }
+
     // get data
     const grades = await Grade.find({ studentId: student._id })
         .populate("subjectId", "name")
         .populate("quizId", "title")
         .populate("assigmentId", "name")
-        .select("score max_score subjectId quizId  assigmentId ");
+        .select("score max_score subjectId quizId assigmentId");
+
     if (grades.length === 0) {
         return next(new AppErorr(message.grade.notFound, 404));
     }
-    // send response
-    res.status(200).json({ message:"get successfully",success: true, studentname: student.userId.name, data: grades  })
+
+    // restructure response
+    const groupedGrades = {};
+
+    grades.forEach((grade) => {
+        const subjectName = grade.subjectId?.name || "Unknown Subject";
+
+        if (!groupedGrades[subjectName]) {
+            groupedGrades[subjectName] = [];
+        }
+
+        if (grade.quizId) {
+            groupedGrades[subjectName].push({
+                type: "quiz",
+                title: grade.quizId.title,
+                score: grade.score,
+                max_score: grade.max_score
+            });
+        } else if (grade.assigmentId) {
+            groupedGrades[subjectName].push({
+                type: "assignment",
+                title: grade.assigmentId.name,
+                score: grade.score,
+                max_score: grade.max_score
+            });
+        }
+    });
+
+    // convert to array
+    const formattedData = Object.entries(groupedGrades).map(([subject, grades]) => ({
+        subject,
+        grades
+    }));
+
+    res.status(200).json({
+        message: "get successfully",
+        success: true,
+        data: {studentname: student.userId.name,formattedData}
+    })
 }
 //------------------9-get-student-subjectes--------------
 export const getStudentSubjects = async (req, res, next) => {
@@ -196,6 +235,7 @@ export const getStudentSubjects = async (req, res, next) => {
         data:{studentname: student.userId.name,
         subjects: student.subjectes.map(subject => ({
             name: subject.name,  
+            description:subject.description
         }))
     }})
 }
@@ -266,26 +306,51 @@ export const getStudentSubjectsWithTasks = async (req, res, next) => {
 export const getStudentGradesInSubject = async (req, res, next) => {
   const { subjectId } = req.params
 
-  // هات الطالب من الـ authUser
   const student = await Student.findOne({ userId: req.authUser._id });
-    // check student existance
-    if (!student) {
-      return next(new AppErorr(message.student.notFound, 404))
-    }
+  if (!student) {
+    return next(new AppErorr(message.student.notFound, 404));
+  }
 
-  //get grade
+  // 
   const grades = await Grade.find({ studentId: student._id, subjectId })
+    .populate("subjectId", "name")
     .populate("quizId", "title")
     .populate("assigmentId", "name")
-    .select("title name")
+    .select("score max_score subjectId quizId assigmentId");
 
   if (!grades.length) {
-    return next(new AppErorr(message.grade.notFound, 404))
+    return next(new AppErorr(message.grade.notFound, 404));
   }
+
+  const subjectName = grades[0]?.subjectId?.name || "Unknown Subject";
+
+  const formattedGrades = grades.map((grade) => {
+    if (grade.quizId) {
+      return {
+        type: "quiz",
+        title: grade.quizId.title,
+        score: grade.score,
+        max_score: grade.max_score
+      };
+    } else if (grade.assigmentId) {
+      return {
+        type: "assignment",
+        title: grade.assigmentId.name,
+        score: grade.score,
+        max_score: grade.max_score
+      };
+    } else {
+      return null;
+    }
+  }).filter(Boolean)
+
   return res.status(200).json({
-    message:"get successfully",
+    message: "get successfully",
     success: true,
-    data: grades,
-  })
+    data: {
+      subject: subjectName,
+      grades: formattedGrades
+    }
+  });
 }
   
