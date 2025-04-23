@@ -122,6 +122,7 @@ export const getTeacherData = async (req, res, next) => {
         return next( new AppErorr(message.teacher.notFound,404))
         }
     res.status(200).json({
+        message:"get successfully",
         success: true,
         data: {
           profilePic: teacher.userId.profilePic?.secure_url || null,  
