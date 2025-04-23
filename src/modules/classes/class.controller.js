@@ -65,14 +65,14 @@ export const updateclass= async (req,res,next) => {
 //---------------------3-getallclasses----------------------------  
 export const getallclasses= async (req,res,next) => {
     //get data from req
-    const classes=await Class.find()
+    const classes=await Class.find().select("_id name")
     res.status(200).json({success:true,data:classes})      
 }
 //---------------4-get specificclass-------------------------
 export const getspecificclass= async (req,res,next) => {
     //get data from req
     const { classId } =req.params
-    const classs=await Class.findById(classId)
+    const classs=await Class.findById(classId).select("_id name")
     classs?
     res.status(200).json({ success:true,data:classs})
         : next (new AppErorr(message.class.notFound,404))
