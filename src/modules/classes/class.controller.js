@@ -66,7 +66,7 @@ export const updateclass= async (req,res,next) => {
 export const getallclasses= async (req,res,next) => {
     //get data from req
     const classes=await Class.find().select("_id name")
-    res.status(200).json({success:true,data:classes})      
+    res.status(200).json({message:"get successfully",success:true,data:classes})      
 }
 //---------------4-get specificclass-------------------------
 export const getspecificclass= async (req,res,next) => {
@@ -74,7 +74,7 @@ export const getspecificclass= async (req,res,next) => {
     const { classId } =req.params
     const classs=await Class.findById(classId).select("_id name")
     classs?
-    res.status(200).json({ success:true,data:classs})
+    res.status(200).json({message:"get successfully", success:true,data:classs})
         : next (new AppErorr(message.class.notFound,404))
 }
 //-------------5-deleteclass-------------------------------------
