@@ -62,8 +62,8 @@ export const updateStudent= async (req,res,next) => {
         }
         //check userexistance
           const userExist=await User.findById(userId)
-           if(!userExist){
-            return next( new AppErorr(message.user.notFound,404))
+           if(userExist){
+            return next( new AppErorr(message.user.alreadyExist,404))
           }
         // prepare data
         if(userId){[
