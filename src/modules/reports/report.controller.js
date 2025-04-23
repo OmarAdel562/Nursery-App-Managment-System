@@ -70,16 +70,16 @@ export const updateReport= async (req,res,next) => {
 //---------------------3-getall Report----------------------------     
 export const getallReport= async (req,res,next) => {
     //get data from req
-    const report=await Report.find()
-    res.status(200).json({success:true,data:report})      
+    const report=await Report.find().select("studentId report")
+    res.status(200).json({message:"get successfully",success:true,data:report})      
 }
 //---------------4-get specific Report-------------------------
 export const getspecificReport= async (req,res,next) => {
     //get data from req
     const { reportId } =req.params
-    const report=await Report.findById(reportId)
+    const report=await Report.findById(reportId).select("studentId report")
     report?
-    res.status(200).json({ success:true,data:report})
+    res.status(200).json({message:"get successfully", success:true,data:report})
         : next (new AppErorr(message.report.notFound,404))
 }
 //-------------5-delete Report-------------------------------------
@@ -96,12 +96,3 @@ export const DeleteReport= async (req,res,next) => {
         success:true
     })
 }
-//-----------------------6-get specific student report-------------
-export const getspecificstudentreport = async (req, res,next) => {
-    const { studentId } = req.params;
-  const report = await Report.find({ studentId })
-  if (report.length === 0) {
-    return next( new AppErorr(message.report.notFound,404))
-  }
-       res.status(200).json({success:true,data:report}) 
-} 

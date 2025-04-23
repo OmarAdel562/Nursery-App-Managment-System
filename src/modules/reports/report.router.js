@@ -5,7 +5,7 @@ import { isValid } from "../../midderware/validation.js";
  import { isAuthenticated } from "../../midderware/authentication.js";
  import { roles } from "../../utils/constant/enum.js";
 import { addReportVal, DeleteReportVal, updateReportVal } from "./report.validation.js";
-import { addReport, DeleteReport, getallReport, getspecificReport, getspecificstudentreport, updateReport } from "./report.controller.js";
+import { addReport, DeleteReport, getallReport, getspecificReport, updateReport } from "./report.controller.js";
 
 
 
@@ -24,7 +24,6 @@ reportrouter.get('/',isAuthenticated(),isAuthorized([roles.MANAGMENT]), asyncHan
 reportrouter.get('/:reportId',isAuthenticated(),isAuthorized([roles.MANAGMENT]), asyncHandler(getspecificReport))
 //5-delete specific Report
 reportrouter.delete('/:reportId',isAuthenticated(),isAuthorized([roles.MANAGMENT]),isValid(DeleteReportVal), asyncHandler(DeleteReport))
-//6- getspecificestudentreport
-reportrouter.get('/student/:studentId',asyncHandler(getspecificstudentreport))
+
 
 export default reportrouter
