@@ -157,7 +157,7 @@ export const getStudentSchedule = async (req, res, next) => {
     res.status(200).json({
       message:"get successfully",
         success: true,
-        data: studentSchedule,
+        data: {studentSchedule: {image: studentSchedule.image }},
     })
 }
 //------------------8-get-student-grades----------------
