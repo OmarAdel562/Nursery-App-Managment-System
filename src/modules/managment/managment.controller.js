@@ -97,14 +97,14 @@ export const updateuser= async (req,res,next) => {
 //---------------------3-getallusers----------------------------        
 export const getallusers= async (req,res,next) => {
     //get data from req
-    const users=await User.find()
+    const users=await User.find().select('-createdAt -updatedAt -__v');
     res.status(200).json({message:"get successfully",success:true,data:users})      
 }
 //---------------4-get specificuser-------------------------
 export const getspecificuser= async (req,res,next) => {
     //get data from req
     const { userId } =req.params
-    const user=await User.findById(userId)
+    const user=await User.findById(userId).select('-createdAt -updatedAt -__v');
     user?
     res.status(200).json({ message:"get successfully",success:true,data:user})
         : next (new AppErorr(message.user.notFound,404))
