@@ -120,16 +120,16 @@ export const updateAssigment= async (req,res,next) => {
 //---------------------3-getall Assigment----------------------------        
 export const getallAssigment= async (req,res,next) => {
     //get data from req
-    const assigment=await Assigment.find()
-    res.status(200).json({success:true,data:assigment})      
+    const assigment=await Assigment.find().select('-createdBy -createdAt -updatedAt -__v')   
+    res.status(200).json({message:"get successfully",success:true,data:assigment})   
 }
 //---------------4-get specificAssigment-------------------------
 export const getspecificAssigment= async (req,res,next) => {
     //get data from req
     const { assigmentId } =req.params
-    const assigment=await Assigment.findById(assigmentId)
+    const assigment=await Assigment.findById(assigmentId).select('-createdBy -createdAt -updatedAt -__v')
     assigment?
-    res.status(200).json({ success:true,data:assigment})
+    res.status(200).json({message:"get successfully", success:true,data:assigment})
         : next (new AppErorr(message.assigment.notFound,404))
 }
 //-------------5-deleteAssigment-------------------------------------
@@ -143,19 +143,20 @@ export const DeleteAssigment= async (req,res,next) => {
        //send response
        return res.status(200).json({
         message:message.assigment.deletesuccessfully,
-        success:true
+        success:true,
+        data:{}
     })
 }
 //-----------------------6-get assigment questiones-------------
 export const getAssigmentBySubject = async (req, res) => {
-    const { subjectId } = req.params; 
+    const { subjectId } = req.params
     const subjectExist=await Subject.findById(subjectId)
  if(!subjectExist){
-    return res.status(404).json({ success: false, message:message.subject.notFound });
+    return res.status(404).json({  message:message.subject.notFound,success:false,data:{} })
  }
-    const assigment = await Assigment.find({ subjectId }).lean();
+    const assigment = await Assigment.find({ subjectId }).lean().select('-createdBy -createdAt -updatedAt -__v')
     if (assigment.length === 0) {
-        return res.status(404).json({ success: false, message:message.assigment.notFound });
+        return res.status(404).json({ message:message.assigment.notFound,success: false,data:{} });
     }
-    res.status(200).json({success:true,data:assigment})
+    res.status(200).json({message:"get successfully",success:true,data:assigment})
 }
