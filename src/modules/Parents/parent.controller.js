@@ -260,31 +260,32 @@ export const getParentNotifications = async (req, res, next) => {
 export const getStudentAttendanceForParent = async (req, res, next) => {
     const parentId = req.authUser._id;
 
-    // Check if the parent exists
+    // Get parent and populate student's user name
     const parent = await Parent.findOne({ userId: parentId }).populate({
         path: "studentId",
-        populate: { path: "userId", select: "name" }
+        populate: {
+            path: "userId",
+            model: "User",
+            select: "name"
+        }
     });
 
-    if (!parent) {
+    if (!parent || !parent.studentId || !parent.studentId.userId) {
         return next(new AppErorr(message.parent.notFound, 404));
     }
 
     const studentId = parent.studentId._id;
 
-    // Fetch attendance for the student
     const attendanceRecords = await Attendance.find({ studentId })
-        .populate('studentId', 'userId')
-        .select('date status')
+        .select("date status")
         .sort({ date: -1 });
 
-    // Always return response even if no records
     return res.status(200).json({
         message: "get successfully",
         success: true,
         data: {
             studentname: parent.studentId.userId.name,
-            attendanceRecords 
+            attendanceRecords
         }
     });
 }
