@@ -1,8 +1,5 @@
 import { Router } from "express";
 import { asyncHandler } from "../../utils/AppError.js";
-import { isAuthenticated } from "../../midderware/authentication.js";
-import { isAuthorized } from "../../midderware/authorization.js";
-import { roles } from "../../utils/constant/enum.js";
 import { upload, markAttendance, leaveAttendance } from "./attendance.controller.js";
 
 const attendanceRouter = Router()

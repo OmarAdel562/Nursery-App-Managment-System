@@ -144,25 +144,30 @@ export const leaveAttendance = async (req, res, next) => {
         if (!studentImageUrl) {
             return next(new AppErorr('Student profile picture not found', 404));
         }
+        console.log(studentImageUrl)
+        
 
         // Step 4: Upload the uploaded image to Cloudinary
-        let uploadedImageUrl;
-        try {
-            const uploadResponse = await cloudinary.uploader.upload_stream({
-                    folder: 'attendance_images',
-                },
-                (error, result) => {
-                    if (error) {
-                        throw error;
-                    }
-                    return result;
-                }
-            ).end(file.buffer); // Use file buffer for upload
-            uploadedImageUrl = uploadResponse.secure_url;
-        } catch (cloudinaryError) {
-            console.error('Cloudinary Upload Error:', cloudinaryError.message);
-            return next(new AppErorr('Failed to upload image. Please try again later.', 500));
-        }
+let uploadedImageUrl;
+try {
+    const uploadResponse = await cloudinary.uploader.upload_stream;
+
+    const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            { folder: 'attendance_images' },
+            (error, result) => {
+                if (error) return reject(error);
+                resolve(result);
+            }
+        );
+        stream.end(file.buffer); // send buffer to the stream
+    });
+
+    uploadedImageUrl = result.secure_url;
+} catch (cloudinaryError) {
+    console.error('Cloudinary Upload Error:', cloudinaryError.message);
+    return next(new AppErorr('Failed to upload image. Please try again later.', 500));
+}
 
         // Step 5: Compare images using Face++ API
         let faceCompareResponse;
@@ -183,6 +188,7 @@ export const leaveAttendance = async (req, res, next) => {
             console.error('Face++ API Error:', apiError.response?.data || apiError.message);
             return next(new AppErorr('Failed to compare faces. Please try again later.', 500));
         }
+        console.log("a7a")
 
         // Step 6: Process the response from Face++
         const { confidence, thresholds } = faceCompareResponse.data;
