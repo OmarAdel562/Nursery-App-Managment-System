@@ -106,7 +106,7 @@ export const getQuestionsBySubject = async (req, res) => {
      }
         const questions = await Question.find({ subjectId }).lean().select('-createdBy -createdAt -updatedAt -__v')   
         if (questions.length === 0) {
-            return res.status(404).json({ message:message.subject.notFound,success:false,data:{} })
+            return res.status(404).json({ message:message.question.notFound,success:false,data:{} })
         }
         res.status(200).json({message:"get successfully",success:true,data:questions})
 }
