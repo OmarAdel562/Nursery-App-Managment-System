@@ -56,7 +56,7 @@ export const addMaterial=async(req,res,next) =>{
 
      return res.status(201).json({message:message.material.createsuccessfully,
         success:true,
-        data:createdmaterial.select('-createdAt -updatedAt -__v')})
+        data:createdmaterial})
 
 }
 //---------------2-update Material---------------
