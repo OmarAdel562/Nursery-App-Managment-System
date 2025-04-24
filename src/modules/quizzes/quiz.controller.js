@@ -161,7 +161,7 @@ export const getQuizBySubject = async (req, res) => {
 } 
 // -----------------------7- start quiz--------------
 export const startQuiz = async (req, res, next) => {
-    const { studentId, quizId } = req.body;
+    const {  quizId } = req.body
     // checkexistance
     const quiz = await Quiz.findById(quizId)
     if (!quiz) {
@@ -169,12 +169,11 @@ export const startQuiz = async (req, res, next) => {
     }
     //  
     const newAttempt = new QuizAttempts({
-        studentId,
         quizId,
         startedAt: new Date()
-    });
+    })
      await newAttempt.save();
-    res.status(200).json({ message: "quiz is starte  ", attemptId: newAttempt._id });
+    res.status(200).json({ message: "quiz is starte  ", success:true,data:{attemptId: newAttempt._id }})
 }
 //----------8-end quiz-------------------------
 export const EndQuiz = async (req, res, next) => {
