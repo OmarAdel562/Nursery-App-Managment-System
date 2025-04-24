@@ -70,16 +70,16 @@ export const updateQuestion= async (req,res,next) => {
 //---------------------3-getall question----------------------------   
 export const getallquestion= async (req,res,next) => {
     //get data from req
-    const questiones=await Question.find()
-    res.status(200).json({success:true,data:questiones})      
+    const questiones=await Question.find().select('-createdBy -createdAt -updatedAt -__v')   
+    res.status(200).json({message:"get successfully",success:true,data:questiones})      
 }
 //---------------4-get specific question-------------------------
 export const getspecificQuestion= async (req,res,next) => {
     //get data from req
     const { questionId } =req.params
-    const question=await Question.findById(questionId)
+    const question=await Question.findById(questionId).select('-createdBy -createdAt -updatedAt -__v')
     question?
-    res.status(200).json({ success:true,data:question})
+    res.status(200).json({message:"get successfully", success:true,data:question})
         : next (new AppErorr(message.question.notFound,404))
 }
 //-------------5-delete question-------------------------------------
@@ -93,7 +93,8 @@ export const DeleteQuestion= async (req,res,next) => {
        //send response
        return res.status(200).json({
         message:message.question.deletesuccessfully,
-        success:true
+        success:true,
+        data:{}
     })
 }
 //-----------------------6-get subject questiones-------------
@@ -101,11 +102,11 @@ export const getQuestionsBySubject = async (req, res) => {
         const { subjectId } = req.params; 
         const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return res.status(404).json({ success: false, message:message.subject.notFound });
+        return res.status(404).json({message:message.subject.notFound,success:false,data:{} })
      }
-        const questions = await Question.find({ subjectId }).lean();
+        const questions = await Question.find({ subjectId }).lean().select('-createdBy -createdAt -updatedAt -__v')   
         if (questions.length === 0) {
-            return res.status(404).json({ success: false, message:message.question.notFound });
+            return res.status(404).json({ message:message.subject.notFound,success:false,data:{} })
         }
-        res.status(200).json({success:true,data:questions})
+        res.status(200).json({message:"get successfully",success:true,data:questions})
 }

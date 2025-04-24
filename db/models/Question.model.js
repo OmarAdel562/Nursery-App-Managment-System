@@ -13,6 +13,6 @@ const questionSchema= new Schema(
           required:true
       }  
        
-},{timestamps:true})
+},{timestamps:false})
 //model
 export const Question= model('Question',questionSchema)
