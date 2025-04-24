@@ -9,8 +9,8 @@ export const addsubjectVal = joi.object({
 
 export const updatesubjectVal = joi.object({
     subjectId:generalFields.objectId,
-    name:generalFields.name.required(),
-    description:generalFields.description.required()
+    name:generalFields.name,
+    description:generalFields.description
 
     
 

@@ -10,8 +10,8 @@ export const addLinkVal = joi.object({
 
 export const updateLinklVal = joi.object({
     linkId:generalFields.objectId,
-    name:generalFields.name.required(),
-    link:generalFields.name.required(),
+    name:generalFields.name,
+    link:generalFields.name,
     subjectId:generalFields.objectId,
 })
 

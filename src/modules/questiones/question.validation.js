@@ -10,9 +10,9 @@ export const addQuestionVal = joi.object({
 })
 export const updateQuestionVal = joi.object({
     questionId:generalFields.objectId,
-    question:generalFields.question.required(),
-    options:generalFields.options.required(),
-    correctAnswer:generalFields.correctAnswer.required(), 
+    question:generalFields.question,
+    options:generalFields.options,
+    correctAnswer:generalFields.correctAnswer, 
      subjectId:generalFields.objectId, 
 })
 export const DeleteQuestionval=joi.object({

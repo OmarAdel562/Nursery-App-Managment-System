@@ -12,10 +12,10 @@ export const addAssigmentlVal = joi.object({
 
 export const updateAssigmentlVal = joi.object({
     assigmentId:generalFields.objectId,
-    name:generalFields.name.required(),
+    name:generalFields.name,
     subjectId:generalFields.objectId,
     classId:generalFields.objectId,
-    dueDate:generalFields.date.required(),
+    dueDate:generalFields.date,
 })
 
 export const DeleteAssigmentval=joi.object({

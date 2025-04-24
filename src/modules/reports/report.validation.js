@@ -9,7 +9,7 @@ export const addReportVal = joi.object({
 
 export const updateReportVal = joi.object({
     reportId:generalFields.objectId,
-    report:generalFields.report.required(), 
+    report:generalFields.report, 
     studentId:generalFields.objectId,
     
 })

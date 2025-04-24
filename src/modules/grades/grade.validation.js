@@ -15,8 +15,8 @@ export const updateGradelVal = joi.object({
      subjectId:generalFields.objectId,
      quizId:generalFields.objectId,
      assigmentId:generalFields.objectId, 
-     score:generalFields.score.required(),
-     max_score:generalFields.max_score.required() 
+     score:generalFields.score,
+     max_score:generalFields.max_score,
 })
 export const DeleteGradeval=joi.object({
     gradeId:generalFields.objectId

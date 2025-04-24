@@ -17,15 +17,15 @@ export const adduserVal = joi.object({
 
 export const updateuserVal = joi.object({
     userId:generalFields.objectId,
-    name:generalFields.name.required(),
-    email:generalFields.email.required(),
-    phone:generalFields.phone.required(),
-    password:generalFields.password.required(),
-    cpassword:generalFields.cpassword.required(),
-    DOB:generalFields.DOB.required(),
-    gander:generalFields.gander.required(),
-    age:generalFields.age.required(),
-    role:generalFields.role.required(),
+    name:generalFields.name,
+    email:generalFields.email,
+    phone:generalFields.phone,
+    password:generalFields.password,
+    cpassword:generalFields.cpassword,
+    DOB:generalFields.DOB,
+    gander:generalFields.gander,
+    age:generalFields.age,
+    role:generalFields.role,
     
 
 })
