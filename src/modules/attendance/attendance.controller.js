@@ -306,7 +306,7 @@ export const leaveAttendance = async (req, res, next) => {
         const attendance = new Attendance({
             studentId: userId,
             date: new Date().toISOString(), // Ensure UTC format
-            status: 'lrave',
+            status: 'leave',
         });
 
         const createdAttendance = await attendance.save();
