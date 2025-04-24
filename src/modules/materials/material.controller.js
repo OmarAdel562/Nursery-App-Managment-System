@@ -154,9 +154,9 @@ export const getMatriaalBySubject = async (req, res) => {
  }
     const material = await Material.find({ subjectId }).lean().select('-createdBy -createdAt -updatedAt -__v')
     if (material.length === 0) {
-        return res.status(404).json({message:"get successfully", success: false, message:message.material.notFound });
+        return res.status(404).json({ success: false, message:message.material.notFound, success: false,data:{}});
     }
-    res.status(200).json({success:true,data:material})
+    res.status(200).json({message:"get successfully",success:true,data:material})
 }
 
 
