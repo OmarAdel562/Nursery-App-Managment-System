@@ -309,16 +309,16 @@ export const leaveAttendance = async (req, res, next) => {
             status: 'leave',
         });
 
-        const createdAttendance = await attendance.save();
-        if (!createdAttendance) {
+        const createdleave = await attendance.save();
+        if (!createdleave) {
             return next(new AppErorr(message.attendance.fileToCreate, 500));
         }
 
         // Step 8: Send a success response
         return res.status(201).json({
-            message: message.attendance.createsuccessfully,
+            message: "leave create successfully ",
             success: true,
-            data: createdAttendance,
+            data: createdleave,
         });
     } catch (error) {
         // Error handling
