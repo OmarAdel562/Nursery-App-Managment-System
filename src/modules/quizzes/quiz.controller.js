@@ -128,7 +128,7 @@ export const getspecificQuiz= async (req,res,next) => {
     const { quizId } =req.params
     const quiz=await Quiz.findById(quizId).select('-createdBy -createdAt -updatedAt -__v')   
     quiz?
-    res.status(200).json({message:"get successfully", success:true,data:quiz})
+    res.status(200).json( {message:"get successfully",success:true,data:quiz})
         : next (new AppErorr(message.quiz.notFound,404))
 }
 //-------------5-delete quiz-------------------------------------
@@ -161,19 +161,20 @@ export const getQuizBySubject = async (req, res) => {
 } 
 // -----------------------7- start quiz--------------
 export const startQuiz = async (req, res, next) => {
-    const {  quizId } = req.body
+    const { studentId, quizId } = req.body;
     // checkexistance
     const quiz = await Quiz.findById(quizId)
     if (!quiz) {
-        return next(new AppErorr(message.quiz.notFound, 404))
+        return next(new AppErorr(message.quiz.notFound, 404));
     }
     //  
     const newAttempt = new QuizAttempts({
+        studentId,
         quizId,
         startedAt: new Date()
-    })
+    });
      await newAttempt.save();
-    res.status(200).json({ message: "quiz is starte  ", success:true,data:{attemptId: newAttempt._id }})
+    res.status(200).json({ message: "quiz is starte  ", data:{attemptId: newAttempt._id} });
 }
 //----------8-end quiz-------------------------
 export const EndQuiz = async (req, res, next) => {
