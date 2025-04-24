@@ -1,28 +1,27 @@
+import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary'; // For image upload to Cloudinary
 import { Attendance } from '../../../db/models/Attendance.model.js';
 import { message } from '../../utils/constant/messages.js';
 import axios from 'axios';
 import { User } from '../../../db/models/User.model.js';
 import AppError from '../../utils/AppError.js';
 import mongoose from 'mongoose';
-import { v2 as cloudinary } from 'cloudinary';
 
-// Configure Cloudinary
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME, // Replace with your Cloudinary cloud name
-    api_key: process.env.CLOUDINARY_API_KEY, // Replace with your Cloudinary API key
-    api_secret: process.env.CLOUDINARY_API_SECRET, // Replace with your Cloudinary API secret
-});
+// Configure Multer for file upload
+const storage = multer.memoryStorage(); // Store files in memory
+export const upload = multer({ storage });
 
 // Utility to validate ObjectId
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
-// ---------------------1-تسجيل الحضور---------------------------------
+// Mark Attendance Controller
 export const markAttendance = async (req, res, next) => {
     try {
-        const { userId, uploadedImage } = req.body; // `uploadedImage` is the file to be uploaded
+        const { userId } = req.body;
+        const file = req.file; // Uploaded file
 
         // Step 1: Validate request parameters
-        if (!userId || !uploadedImage) {
+        if (!userId || !file) {
             return next(new AppError(message.student.notFound, 404));
         }
 
@@ -45,21 +44,23 @@ export const markAttendance = async (req, res, next) => {
         // Step 4: Upload the uploaded image to Cloudinary
         let uploadedImageUrl;
         try {
-            const uploadResponse = await cloudinary.uploader.upload(uploadedImage, {
-                folder: 'attendance_images', // Optional: Organize images in a folder
-            });
-            uploadedImageUrl = uploadResponse.secure_url; // Get the secure URL of the uploaded image
+            const uploadResponse = await cloudinary.uploader.upload_stream({
+                    folder: 'attendance_images',
+                },
+                (error, result) => {
+                    if (error) {
+                        throw error;
+                    }
+                    return result;
+                }
+            ).end(file.buffer); // Use file buffer for upload
+            uploadedImageUrl = uploadResponse.secure_url;
         } catch (cloudinaryError) {
             console.error('Cloudinary Upload Error:', cloudinaryError.message);
             return next(new AppError('Failed to upload image. Please try again later.', 500));
         }
 
-        // Step 5: Validate environment variables
-        if (!process.env.FACE_API_KEY || !process.env.FACE_API_SECRET) {
-            return next(new AppError('Face++ API credentials are missing', 500));
-        }
-
-        // Step 6: Compare images using Face++ API
+        // Step 5: Compare images using Face++ API
         let faceCompareResponse;
         try {
             faceCompareResponse = await axios.post(
@@ -79,7 +80,7 @@ export const markAttendance = async (req, res, next) => {
             return next(new AppError('Failed to compare faces. Please try again later.', 500));
         }
 
-        // Step 7: Process the response from Face++
+        // Step 6: Process the response from Face++
         const { confidence, thresholds } = faceCompareResponse.data;
         const threshold = thresholds['1e-5']; // High precision threshold
 
@@ -87,7 +88,7 @@ export const markAttendance = async (req, res, next) => {
             return next(new AppError('Face does not match the profile picture', 403));
         }
 
-        // Step 8: Mark attendance as present
+        // Step 7: Mark attendance as present
         const attendance = new Attendance({
             studentId: userId,
             date: new Date().toISOString(), // Ensure UTC format
@@ -99,7 +100,7 @@ export const markAttendance = async (req, res, next) => {
             return next(new AppError(message.attendance.fileToCreate, 500));
         }
 
-        // Step 9: Send a success response
+        // Step 8: Send a success response
         return res.status(201).json({
             message: message.attendance.createsuccessfully,
             success: true,
@@ -111,14 +112,14 @@ export const markAttendance = async (req, res, next) => {
         return next(new AppError(error.message || 'Internal server error', 500));
     }
 };
-
-// --------------------------2-تسجيل الانصراف---------------------------------
+// Leave Attendance Controller
 export const leaveAttendance = async (req, res, next) => {
     try {
-        const { userId, uploadedImage } = req.body; // `uploadedImage` is the file to be uploaded
+        const { userId } = req.body;
+        const file = req.file; // Uploaded file
 
         // Step 1: Validate request parameters
-        if (!userId || !uploadedImage) {
+        if (!userId || !file) {
             return next(new AppError(message.student.notFound, 404));
         }
 
@@ -141,21 +142,23 @@ export const leaveAttendance = async (req, res, next) => {
         // Step 4: Upload the uploaded image to Cloudinary
         let uploadedImageUrl;
         try {
-            const uploadResponse = await cloudinary.uploader.upload(uploadedImage, {
-                folder: 'attendance_images', // Optional: Organize images in a folder
-            });
-            uploadedImageUrl = uploadResponse.secure_url; // Get the secure URL of the uploaded image
+            const uploadResponse = await cloudinary.uploader.upload_stream({
+                    folder: 'attendance_images',
+                },
+                (error, result) => {
+                    if (error) {
+                        throw error;
+                    }
+                    return result;
+                }
+            ).end(file.buffer); // Use file buffer for upload
+            uploadedImageUrl = uploadResponse.secure_url;
         } catch (cloudinaryError) {
             console.error('Cloudinary Upload Error:', cloudinaryError.message);
             return next(new AppError('Failed to upload image. Please try again later.', 500));
         }
 
-        // Step 5: Validate environment variables
-        if (!process.env.FACE_API_KEY || !process.env.FACE_API_SECRET) {
-            return next(new AppError('Face++ API credentials are missing', 500));
-        }
-
-        // Step 6: Compare images using Face++ API
+        // Step 5: Compare images using Face++ API
         let faceCompareResponse;
         try {
             faceCompareResponse = await axios.post(
@@ -175,7 +178,7 @@ export const leaveAttendance = async (req, res, next) => {
             return next(new AppError('Failed to compare faces. Please try again later.', 500));
         }
 
-        // Step 7: Process the response from Face++
+        // Step 6: Process the response from Face++
         const { confidence, thresholds } = faceCompareResponse.data;
         const threshold = thresholds['1e-5']; // High precision threshold
 
@@ -183,27 +186,27 @@ export const leaveAttendance = async (req, res, next) => {
             return next(new AppError('Face does not match the profile picture', 403));
         }
 
-        // Step 8: Mark attendance as leave
+        // Step 7: Mark attendance as present
         const attendance = new Attendance({
             studentId: userId,
             date: new Date().toISOString(), // Ensure UTC format
             status: 'leave',
         });
 
-        const createdLeave = await attendance.save();
-        if (!createdLeave) {
+        const createdAttendance = await attendance.save();
+        if (!createdAttendance) {
             return next(new AppError(message.attendance.fileToCreate, 500));
         }
 
-        // Step 9: Send a success response
+        // Step 8: Send a success response
         return res.status(201).json({
             message: message.attendance.createsuccessfully,
             success: true,
-            data: createdLeave,
+            data: createdAttendance,
         });
     } catch (error) {
         // Error handling
-        console.error('Error in leaveAttendance:', error.message);
+        console.error('Error in markAttendance:', error.message);
         return next(new AppError(error.message || 'Internal server error', 500));
     }
 };
