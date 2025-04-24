@@ -141,7 +141,8 @@ export const DeleteMaterial= async (req,res,next) => {
        //send response
        return res.status(200).json({
         message:message.material.deletesuccessfully,
-        success:true
+        success:true,
+        data:{}
     })
     }
 //-----------------------6-get subject material -------------
