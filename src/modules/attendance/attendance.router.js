@@ -5,26 +5,14 @@ import { isAuthorized } from "../../midderware/authorization.js";
 import { roles } from "../../utils/constant/enum.js";
 import { upload, markAttendance, leaveAttendance } from "./attendance.controller.js";
 
-const attendanceRouter = Router();
+const attendanceRouter = Router()
 
 // ------------------ Routes for Attendance ------------------
 
-// 1- Mark Attendance (with file upload)
-attendanceRouter.post(
-    "/createattendance",
-    isAuthenticated, // Ensure the user is authenticated
-    isAuthorized(roles.STUDENT), // Ensure the user has the correct role
-    upload.single("uploadedImage"), // Use multer to handle single file upload
-    asyncHandler(markAttendance) // Call the controller function
-);
+//------1- Mark Attendance (with file upload)
+attendanceRouter.post( "/createattendance", upload.single("uploadedImage"),asyncHandler(markAttendance))
 
-// 2- Leave Attendance (with file upload)
-attendanceRouter.post(
-    "/leaveattendance",
-    isAuthenticated, // Ensure the user is authenticated
-    isAuthorized(roles.STUDENT), // Ensure the user has the correct role
-    upload.single("uploadedImage"), // Use multer to handle single file upload
-    asyncHandler(leaveAttendance) // Call the controller function
-);
+//----2- Leave Attendance (with file upload)
+attendanceRouter.post( "/leaveattendance",upload.single("uploadedImage"), asyncHandler(leaveAttendance))
 
-export default attendanceRouter;
+export default attendanceRouter

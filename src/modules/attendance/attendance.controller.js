@@ -14,7 +14,7 @@ export const upload = multer({ storage });
 // Utility to validate ObjectId
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
-// Mark Attendance Controller
+// ---------------------Mark Attendance Controller------------------------------
 export const markAttendance = async (req, res, next) => {
     try {
         const { userId } = req.body;
@@ -112,7 +112,7 @@ export const markAttendance = async (req, res, next) => {
         return next(new AppErorr(error.message || 'Internal server error', 500));
     }
 };
-// Leave Attendance Controller
+//------------- Leave Attendance Controller------------------------------------
 export const leaveAttendance = async (req, res, next) => {
     try {
         const { userId } = req.body;
