@@ -33,6 +33,6 @@ const gradeSchema= new Schema(
                 required:true
             }
        
-},{timestamps:true})
+},{timestamps:false})
 //model
 export const Grade= model('Grade',gradeSchema)

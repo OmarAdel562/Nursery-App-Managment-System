@@ -15,6 +15,6 @@ const quizSchema= new Schema(
           required:true
       }  
        
-},{timestamps:true})
+},{timestamps:false})
 //model
 export const Quiz= model('Quiz',quizSchema)

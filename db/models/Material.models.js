@@ -16,6 +16,6 @@ const materialSchema= new Schema(
         required:true
     }
     
-},{timestamps:true})
+},{timestamps:false})
 //model
 export const Material= model('Material',materialSchema)

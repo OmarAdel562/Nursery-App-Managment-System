@@ -119,16 +119,16 @@ export const updateQuiz= async (req,res,next) => {
 //---------------------3-getall quiz----------------------------      
 export const getallQuiz= async (req,res,next) => {
     //get data from req
-    const quiz=await Quiz.find()
-    res.status(200).json({success:true,data:quiz})      
+    const quiz=await Quiz.find().select('-createdBy -createdAt -updatedAt -__v')   
+    res.status(200).json({message:"get successfully",success:true,data:quiz})      
 }
 //---------------4-get specific quiz-------------------------
 export const getspecificQuiz= async (req,res,next) => {
     //get data from req
     const { quizId } =req.params
-    const quiz=await Quiz.findById(quizId)
+    const quiz=await Quiz.findById(quizId).select('-createdBy -createdAt -updatedAt -__v')   
     quiz?
-    res.status(200).json({ success:true,data:quiz})
+    res.status(200).json( {message:"get successfully",success:true,data:quiz})
         : next (new AppErorr(message.quiz.notFound,404))
 }
 //-------------5-delete quiz-------------------------------------
@@ -142,7 +142,8 @@ export const DeleteQuiz= async (req,res,next) => {
        //send response
        return res.status(200).json({
         message:message.quiz.deletesuccessfully,
-        success:true
+        success:true,
+        data:{}
     })
 }
 //-----------------------6-get subject quiz-------------
@@ -150,13 +151,13 @@ export const getQuizBySubject = async (req, res) => {
           const { subjectId } = req.params; 
           const subjectExist=await Subject.findById(subjectId)
        if(!subjectExist){
-          return res.status(404).json({ success: false, message:message.subject.notFound });
+          return res.status(404).json({ message:message.subject.notFound,success:false,data:{}  });
        }
-          const quizzes = await Quiz.find({ subjectId });
+          const quizzes = await Quiz.find({ subjectId }).select('-createdBy -createdAt -updatedAt -__v')   
           if (quizzes.length === 0) {
-              return res.status(404).json({ success: false, message:message.quiz.notFound });
+              return res.status(404).json({ message:message.quiz.notFound,success:false,data:{}  });
           }
-          res.status(200).json({success:true,data:quizzes})
+          res.status(200).json({message:"get successfully",success:true,data:quizzes})
 } 
 // -----------------------7- start quiz--------------
 export const startQuiz = async (req, res, next) => {
@@ -173,7 +174,7 @@ export const startQuiz = async (req, res, next) => {
         startedAt: new Date()
     });
      await newAttempt.save();
-    res.status(200).json({ message: "quiz is starte  ", attemptId: newAttempt._id });
+    res.status(200).json({ message: "quiz is starte  ", data:{attemptId: newAttempt._id} });
 }
 //----------8-end quiz-------------------------
 export const EndQuiz = async (req, res, next) => {

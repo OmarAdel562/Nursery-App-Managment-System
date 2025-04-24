@@ -1,4 +1,5 @@
 //import modules
+import cors from 'cors'
 import path from 'path'
 import express from 'express'
 import { connectDB } from './db/connection.js'
@@ -31,6 +32,10 @@ const app=express()
 const port= process.env.PORT || 3000
 dotenv.config({ path:path.resolve('./config/.env') })
 connectDB()
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  credentials: true
+}))
 
 //-----
 // إنشاء سيرفر HTTP من Express

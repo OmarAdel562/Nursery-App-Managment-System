@@ -118,16 +118,16 @@ export const addMaterial=async(req,res,next) =>{
 //---------------------3-getallMaterial----------------------------  
 export const getallMaterial= async (req,res,next) => {
     //get data from req
-    const materials=await Material.find()
-    res.status(200).json({success:true,data:materials})      
+    const materials=await Material.find().select('-createdBy -createdAt -updatedAt -__v')
+    res.status(200).json({message:"get successfully",success:true,data:materials})      
 }
 //---------------4-get specificMaterial-------------------------
 export const getspecificMaterial= async (req,res,next) => {
     //get data from req
     const { materialId } =req.params
-    const material=await Material.findById(materialId)
+    const material=await Material.findById(materialId).select('-createdBy -createdAt -updatedAt -__v')
     material?
-    res.status(200).json({ success:true,data:material})
+    res.status(200).json({message:"get successfully", success:true,data:material})
         : next (new AppErorr(message.material.notFound,404))
 }
 //-------------5-deleteMaterial-------------------------------------
@@ -141,7 +141,8 @@ export const DeleteMaterial= async (req,res,next) => {
        //send response
        return res.status(200).json({
         message:message.material.deletesuccessfully,
-        success:true
+        success:true,
+        data:{}
     })
     }
 //-----------------------6-get subject material -------------
@@ -149,13 +150,13 @@ export const getMatriaalBySubject = async (req, res) => {
     const { subjectId } = req.params; 
     const subjectExist=await Subject.findById(subjectId)
  if(!subjectExist){
-    return res.status(404).json({ success: false, message:message.subject.notFound });
+    return res.status(404).json({  message:message.subject.notFound,success: false,data:{} })
  }
-    const material = await Material.find({ subjectId }).lean();
+    const material = await Material.find({ subjectId }).lean().select('-createdBy -createdAt -updatedAt -__v')
     if (material.length === 0) {
-        return res.status(404).json({ success: false, message:message.material.notFound });
+        return res.status(404).json({  message:message.material.notFound, success:false,data:{}});
     }
-    res.status(200).json({success:true,data:material})
+    res.status(200).json({message:"get successfully",success:true,data:material})
 }
 
 

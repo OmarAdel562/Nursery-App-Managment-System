@@ -19,6 +19,6 @@ const linkSchema= new Schema(
                 required:true
             }
        
-},{timestamps:true})
+},{timestamps:false})
 //model
 export const Link= model('Link',linkSchema)

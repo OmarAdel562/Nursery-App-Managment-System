@@ -82,16 +82,16 @@ export const updateLink= async (req,res,next) => {
 //---------------------3-getall Link----------------------------     
 export const getallLink= async (req,res,next) => {
     //get data from req
-    const link=await Link.find()
-    res.status(200).json({success:true,data:link})      
+    const link=await Link.find().select('-createdBy -createdAt -updatedAt -__v')   
+    res.status(200).json({message:"get successfully",success:true,data:link})      
 }
 //---------------4-get specific Link-------------------------
 export const getspecificLink= async (req,res,next) => {
     //get data from req
     const { linkId } =req.params
-    const link=await Link.findById(linkId)
+    const link=await Link.findById(linkId).select('-createdBy -createdAt -updatedAt -__v')   
     link?
-    res.status(200).json({ success:true,data:link})
+    res.status(200).json({message:"get successfully", success:true,data:link})
         : next (new AppErorr(message.link.notFound,404))
 }
 //-------------5-delete Link-------------------------------------
@@ -105,19 +105,20 @@ export const DeleteLink= async (req,res,next) => {
        //send response
        return res.status(200).json({
         message:message.link.deletesuccessfully,
-        success:true
+        success:true,
+        data:{}
     })
 }
 //-----------------------6-get subject link-------------
 export const getlinkBySubject = async (req, res) => {
-          const { subjectId } = req.params; 
+          const { subjectId } = req.params
           const subjectExist=await Subject.findById(subjectId)
        if(!subjectExist){
-          return res.status(404).json({ success: false, message:message.subject.notFound });
+          return res.status(404).json({  message:message.subject.notFound,success: false,data:{} })
        }
-          const linkes = await Link.find({ subjectId }).lean();
+          const linkes = await Link.find({ subjectId }).lean().select('-createdBy -createdAt -updatedAt -__v')   
           if (linkes.length === 0) {
-              return res.status(404).json({ success: false, message:message.link.notFound });
+              return res.status(404).json({ message:message.link.notFound ,success:false, data:{} })
           }
-          res.status(200).json({success:true,data:linkes})
+          res.status(200).json({message:"get successfully",success:true,data:linkes})
 }   
