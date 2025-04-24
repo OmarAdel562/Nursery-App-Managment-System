@@ -274,11 +274,11 @@ export const getStudentAttendanceForParent = async (req, res, next) => {
         return next(new AppErorr(message.parent.notFound, 404));
     }
 
-    const studentId = parent.studentId._id;
+    const studentUserId = parent.studentId.userId._id;
 
-    const attendanceRecords = await Attendance.find({ studentId })
-        .select("date status")
-        .sort({ date: -1 });
+const attendanceRecords = await Attendance.find({ studentId: studentUserId })
+    .select("date status")
+    .sort({ date: -1 });
 
     return res.status(200).json({
         message: "get successfully",
