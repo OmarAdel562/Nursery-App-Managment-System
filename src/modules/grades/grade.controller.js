@@ -84,16 +84,16 @@ export const updateGrade= async (req,res,next) => {
 //---------------------3-getall grade----------------------------      
 export const getallGrade= async (req,res,next) => {
     //get data from req
-    const grade=await Grade.find()
-    res.status(200).json({success:true,data:grade})      
+    const grade=await Grade.find().select('-createdBy -createdAt -updatedAt -__v')   
+    res.status(200).json({message:"get successfully",success:true,data:grade})      
 }
 //---------------4-get specific grade-------------------------
   export const getspecificGrade= async (req,res,next) => {
     //get data from req
     const { gradeId } =req.params
-    const grade=await Grade.findById(gradeId)
+    const grade=await Grade.findById(gradeId).select('-createdBy -createdAt -updatedAt -__v')   
     grade?
-    res.status(200).json({ success:true,data:grade})
+    res.status(200).json({message:"get successfully", success:true,data:grade})
         : next (new AppErorr(message.grade.notFound,404))
 }
 //-------------5-delete grade-------------------------------------
@@ -107,6 +107,7 @@ export const DeleteGrade= async (req,res,next) => {
        //send response
        return res.status(200).json({
         message:message.grade.deletesuccessfully,
-        success:true
+        success:true,
+        data:{}
     })
 }
