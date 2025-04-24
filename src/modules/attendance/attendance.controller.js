@@ -4,8 +4,8 @@ import { Attendance } from '../../../db/models/Attendance.model.js';
 import { message } from '../../utils/constant/messages.js';
 import axios from 'axios';
 import { User } from '../../../db/models/User.model.js';
-import AppError from '../../utils/AppError.js';
 import mongoose from 'mongoose';
+import { AppErorr } from '../../utils/AppError.js';
 
 // Configure Multer for file upload
 const storage = multer.memoryStorage(); // Store files in memory
@@ -22,23 +22,23 @@ export const markAttendance = async (req, res, next) => {
 
         // Step 1: Validate request parameters
         if (!userId || !file) {
-            return next(new AppError(message.student.notFound, 404));
+            return next(new AppErorr(message.student.notFound, 404));
         }
 
         if (!isValidObjectId(userId)) {
-            return next(new AppError('Invalid user ID', 400));
+            return next(new AppErorr('Invalid user ID', 400));
         }
 
         // Step 2: Check if the student exists
         const student = await User.findOne({ _id: userId });
         if (!student) {
-            return next(new AppError(message.student.notFound, 404));
+            return next(new AppErorr(message.student.notFound, 404));
         }
 
         // Step 3: Get the student's profile picture
         const studentImageUrl = student.profilePic?.secure_url;
         if (!studentImageUrl) {
-            return next(new AppError('Student profile picture not found', 404));
+            return next(new AppErorr('Student profile picture not found', 404));
         }
 
         // Step 4: Upload the uploaded image to Cloudinary
@@ -57,7 +57,7 @@ export const markAttendance = async (req, res, next) => {
             uploadedImageUrl = uploadResponse.secure_url;
         } catch (cloudinaryError) {
             console.error('Cloudinary Upload Error:', cloudinaryError.message);
-            return next(new AppError('Failed to upload image. Please try again later.', 500));
+            return next(new AppErorr('Failed to upload image. Please try again later.', 500));
         }
 
         // Step 5: Compare images using Face++ API
@@ -77,7 +77,7 @@ export const markAttendance = async (req, res, next) => {
             );
         } catch (apiError) {
             console.error('Face++ API Error:', apiError.response?.data || apiError.message);
-            return next(new AppError('Failed to compare faces. Please try again later.', 500));
+            return next(new AppErorr('Failed to compare faces. Please try again later.', 500));
         }
 
         // Step 6: Process the response from Face++
@@ -85,7 +85,7 @@ export const markAttendance = async (req, res, next) => {
         const threshold = thresholds['1e-5']; // High precision threshold
 
         if (confidence < threshold) {
-            return next(new AppError('Face does not match the profile picture', 403));
+            return next(new AppErorr('Face does not match the profile picture', 403));
         }
 
         // Step 7: Mark attendance as present
@@ -97,7 +97,7 @@ export const markAttendance = async (req, res, next) => {
 
         const createdAttendance = await attendance.save();
         if (!createdAttendance) {
-            return next(new AppError(message.attendance.fileToCreate, 500));
+            return next(new AppErorr(message.attendance.fileToCreate, 500));
         }
 
         // Step 8: Send a success response
@@ -109,7 +109,7 @@ export const markAttendance = async (req, res, next) => {
     } catch (error) {
         // Error handling
         console.error('Error in markAttendance:', error.message);
-        return next(new AppError(error.message || 'Internal server error', 500));
+        return next(new AppErorr(error.message || 'Internal server error', 500));
     }
 };
 // Leave Attendance Controller
@@ -120,23 +120,23 @@ export const leaveAttendance = async (req, res, next) => {
 
         // Step 1: Validate request parameters
         if (!userId || !file) {
-            return next(new AppError(message.student.notFound, 404));
+            return next(new AppErorr(message.student.notFound, 404));
         }
 
         if (!isValidObjectId(userId)) {
-            return next(new AppError('Invalid user ID', 400));
+            return next(new AppErorr('Invalid user ID', 400));
         }
 
         // Step 2: Check if the student exists
         const student = await User.findOne({ _id: userId });
         if (!student) {
-            return next(new AppError(message.student.notFound, 404));
+            return next(new AppErorr(message.student.notFound, 404));
         }
 
         // Step 3: Get the student's profile picture
         const studentImageUrl = student.profilePic?.secure_url;
         if (!studentImageUrl) {
-            return next(new AppError('Student profile picture not found', 404));
+            return next(new AppErorr('Student profile picture not found', 404));
         }
 
         // Step 4: Upload the uploaded image to Cloudinary
@@ -155,7 +155,7 @@ export const leaveAttendance = async (req, res, next) => {
             uploadedImageUrl = uploadResponse.secure_url;
         } catch (cloudinaryError) {
             console.error('Cloudinary Upload Error:', cloudinaryError.message);
-            return next(new AppError('Failed to upload image. Please try again later.', 500));
+            return next(new AppErorr('Failed to upload image. Please try again later.', 500));
         }
 
         // Step 5: Compare images using Face++ API
@@ -175,7 +175,7 @@ export const leaveAttendance = async (req, res, next) => {
             );
         } catch (apiError) {
             console.error('Face++ API Error:', apiError.response?.data || apiError.message);
-            return next(new AppError('Failed to compare faces. Please try again later.', 500));
+            return next(new AppErorr('Failed to compare faces. Please try again later.', 500));
         }
 
         // Step 6: Process the response from Face++
@@ -183,7 +183,7 @@ export const leaveAttendance = async (req, res, next) => {
         const threshold = thresholds['1e-5']; // High precision threshold
 
         if (confidence < threshold) {
-            return next(new AppError('Face does not match the profile picture', 403));
+            return next(new AppErorr('Face does not match the profile picture', 403));
         }
 
         // Step 7: Mark attendance as present
@@ -195,7 +195,7 @@ export const leaveAttendance = async (req, res, next) => {
 
         const createdAttendance = await attendance.save();
         if (!createdAttendance) {
-            return next(new AppError(message.attendance.fileToCreate, 500));
+            return next(new AppErorr(message.attendance.fileToCreate, 500));
         }
 
         // Step 8: Send a success response
@@ -207,6 +207,6 @@ export const leaveAttendance = async (req, res, next) => {
     } catch (error) {
         // Error handling
         console.error('Error in markAttendance:', error.message);
-        return next(new AppError(error.message || 'Internal server error', 500));
+        return next(new AppErorr(error.message || 'Internal server error', 500));
     }
 };
