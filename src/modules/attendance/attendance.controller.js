@@ -227,6 +227,7 @@ export const leaveAttendance = async (req, res, next) => {
     try {
         const { userId } = req.body;
         const file = req.file;
+        console.log("Received userId:", userId);
 
         // Step 1: Validate request parameters
         if (!userId || !file) {
