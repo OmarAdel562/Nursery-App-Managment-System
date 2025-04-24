@@ -4,7 +4,7 @@ import { attendancestatus } from "../../src/utils/constant/enum.js";
 //schema
 const attendanceSchema= new Schema(
     {
-        userId: { type:Schema.Types.ObjectId, ref: 'User', required: true }, 
+        studentId: { type:Schema.Types.ObjectId, ref: 'User', required: true }, 
         date: { type:Date,default:Date.now() }, 
         status: { 
             type: String, 

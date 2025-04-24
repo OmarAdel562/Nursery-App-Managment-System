@@ -40,6 +40,8 @@ export const markAttendance = async (req, res, next) => {
         if (!studentImageUrl) {
             return next(new AppErorr('Student profile picture not found', 404));
         }
+        console.log(studentImageUrl)
+        
 
         // Step 4: Upload the uploaded image to Cloudinary
         let uploadedImageUrl;
@@ -79,6 +81,7 @@ export const markAttendance = async (req, res, next) => {
             console.error('Face++ API Error:', apiError.response?.data || apiError.message);
             return next(new AppErorr('Failed to compare faces. Please try again later.', 500));
         }
+        console.log("a7a")
 
         // Step 6: Process the response from Face++
         const { confidence, thresholds } = faceCompareResponse.data;
