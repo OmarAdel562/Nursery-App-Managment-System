@@ -20,14 +20,9 @@ export const updateuserVal = joi.object({
     name:generalFields.name,
     email:generalFields.email,
     phone:generalFields.phone,
-    password:generalFields.password,
-    cpassword:generalFields.cpassword,
     DOB:generalFields.DOB,
     gander:generalFields.gander,
-    age:generalFields.age,
     role:generalFields.role,
-    
-
 })
 
 export const Deleteuserval=joi.object({
