@@ -13,11 +13,11 @@ export const addQuizVal = joi.object({
 
 export const updateQuizVal = joi.object({
     quizId:generalFields.objectId,
-    title:generalFields.name,
-    duration:generalFields.duration,
-    subjectId:generalFields.objectId,
-    classId:generalFields.objectId,
-    numQuestions:generalFields.numQuestions
+    title:generalFields.name.optional(),
+    duration:generalFields.duration.optional(),
+    subjectId:generalFields.objectId.optional(),
+    classId:generalFields.objectId.optional(),
+    numQuestions:generalFields.numQuestions.optional()
 })
 
 export const DeleteQuizval=joi.object({

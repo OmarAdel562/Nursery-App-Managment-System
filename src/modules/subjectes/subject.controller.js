@@ -42,15 +42,14 @@ export const updatesubject= async (req,res,next) => {
             return next( new AppErorr(message.subject.notFound,404))
         }
         //check name existance
-        const nameExist= await Subject.findOne({name})
+        const nameExist= await Subject.findOne({name,_id:{$ne:subjectId }})
         if(nameExist){
             return next( new AppErorr(message.subject.alreadyExist,409))
         }
         // prepare data
-        if(name){ [
-            subjectExist.name=name,
-            subjectExist.description=description
-        ]}
+        subjectExist.name = name || subjectExist.name;
+        subjectExist.description = description || subjectExist.description;
+
             
         //update  to db
         const updatesubject= await subjectExist.save()

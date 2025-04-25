@@ -59,15 +59,13 @@ export const updateGrade= async (req,res,next) => {
         return next( new AppErorr(message.subject.notFound,404))
      }
         // prepare data
-        if(studentId){[
-            
-            gradeExist.studentId=studentId,
-            gradeExist.subjectId=subjectId,
-            gradeExist.quizId=quizId,
-            gradeExist.assigmentId=assigmentId,
-            gradeExist.score=score,
-            gradeExist.max_score=max_score,
-        ]}
+        gradeExist.studentId = studentId || gradeExist.studentId;
+        gradeExist.subjectId = subjectId || gradeExist.subjectId;
+        gradeExist.quizId = quizId || gradeExist.quizId;
+        gradeExist.assigmentId = assigmentId || gradeExist.assigmentId;
+        gradeExist.score = score || gradeExist.score;
+        gradeExist.max_score = max_score || gradeExist.max_score;
+        
     
         //update  to db
         const updategrade= await gradeExist.save()

@@ -1,6 +1,4 @@
 import { Class } from "../../../db/models/Class.model.js"
-import { Student } from "../../../db/models/Student.model.js"
-import { Teacher } from "../../../db/models/Teacher.model.js"
 import { AppErorr } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 
@@ -48,7 +46,8 @@ export const updateclass= async (req,res,next) => {
             return next( new AppErorr(message.class.alreadyExist,409))
         }
         // prepare data
-        if(name){ [classExist.name=name]}
+        classExist.name = name || classExist.name;
+
             
         //update  to db
         const updateclass= await classExist.save()

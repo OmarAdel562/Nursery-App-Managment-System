@@ -60,12 +60,11 @@ export const updateLink= async (req,res,next) => {
         return next( new AppErorr(message.subject.notFound,404))
      }
         // prepare data
-        if(name){[
-            
-            linkExist.name=name,
-            linkExist.link=link,
-            linkExist.subjectId=subjectId, 
-        ]}
+        linkExist.name = name || linkExist.name;
+        linkExist.link = link || linkExist.link;
+        linkExist.subjectId = subjectId || linkExist.subjectId;
+   
+
     
         //update  to db
         const updatelink= await linkExist.save()

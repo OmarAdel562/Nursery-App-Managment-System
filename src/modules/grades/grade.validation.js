@@ -11,12 +11,12 @@ export const addGradeVal = joi.object({
 })
 export const updateGradelVal = joi.object({
     gradeId:generalFields.objectId,
-    studentId:generalFields.objectId,
-     subjectId:generalFields.objectId,
-     quizId:generalFields.objectId,
-     assigmentId:generalFields.objectId, 
-     score:generalFields.score,
-     max_score:generalFields.max_score,
+    studentId:generalFields.objectId.optional(),
+     subjectId:generalFields.objectId.optional(),
+     quizId:generalFields.objectId.optional(),
+     assigmentId:generalFields.objectId.optional(), 
+     score:generalFields.score.optional(),
+     max_score:generalFields.max_score.optional(),
 })
 export const DeleteGradeval=joi.object({
     gradeId:generalFields.objectId

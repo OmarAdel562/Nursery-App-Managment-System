@@ -9,7 +9,7 @@ export const addclassVal = joi.object({
 
 export const updateclassVal = joi.object({
     classId:generalFields.objectId,
-    name:generalFields.name, 
+    name:generalFields.name.optional(), 
 })
 
 export const Deleteclassval=joi.object({

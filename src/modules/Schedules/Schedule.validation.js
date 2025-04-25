@@ -9,7 +9,7 @@ export const addScheduleVal = joi.object({
 
 export const updateScheduleVal = joi.object({
     scheduleId:generalFields.objectId,
-    userId:generalFields.objectId, 
+    userId:generalFields.objectId.optional, 
     
     
 

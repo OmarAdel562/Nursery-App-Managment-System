@@ -10,8 +10,8 @@ export const addParentVal = joi.object({
 
 export const updateParentlVal = joi.object({
     parentId:generalFields.objectId,
-    userId:generalFields.objectId,
-    studentId:generalFields.objectId,
+    userId:generalFields.objectId.optional(),
+    studentId:generalFields.objectId.optional(),
 })
 
 export const DeleteParentval=joi.object({

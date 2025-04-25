@@ -61,10 +61,9 @@ export const updateParent= async (req,res,next) => {
             return next( new AppErorr(message.user.notFound,404))
           }
         // prepare data
-        if(userId){[
-            parentExist.userId=userId,
-            parentExist.studentId=studentId, 
-        ]}
+        parentExist.userId = userId || parentExist.userId;
+        parentExist.studentId = studentId || parentExist.studentId;
+
     
         //update  to db
         const updateparent= await parentExist.save()

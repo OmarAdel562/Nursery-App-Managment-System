@@ -10,9 +10,9 @@ export const addTeacherVal = joi.object({
 
 export const updateTeacherlVal = joi.object({
     teacherId:generalFields.objectId,
-    userId:generalFields.objectId,
-    classId:generalFields.objectId,
-    subjectes:joi.array().items(joi.string().hex().length(24))
+    userId:generalFields.objectId.optional(),
+    classId:generalFields.objectId.optional(),
+    subjectes:joi.array().items(joi.string().hex().length(24)).optional()
 })
 
 export const DeleteTeacherval=joi.object({

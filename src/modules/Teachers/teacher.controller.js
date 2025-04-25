@@ -63,12 +63,10 @@ import { message } from "../../utils/constant/messages.js"
             return next( new AppErorr(message.user.notFound,404))
           }
         // prepare data
-        if(userId){[
-            
-            teachertExist.userId=userId,
-            teachertExist.classId=classId,
-            teachertExist.subjectes=subjectes, 
-        ]}
+        teachertExist.userId = userId || teachertExist.userId;
+        teachertExist.classId = classId || teachertExist.classId;
+        teachertExist.subjectes = subjectes || teachertExist.subjectes;
+        
     
         //update  to db
         const updateteacher= await teachertExist.save()

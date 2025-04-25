@@ -66,13 +66,10 @@ export const updateStudent= async (req,res,next) => {
             return next( new AppErorr(message.user.notFound,404))
           }
         // prepare data
-        if(userId){[
-            
-            studentExist.userId=userId,
-            studentExist.classId=classId,
-            studentExist.subjectes=subjectes, 
-        ]}
-    
+        studentExist.userId = userId || studentExist.userId;
+        studentExist.classId = classId || studentExist.classId;
+        studentExist.subjectes = subjectes || studentExist.subjectes;
+
         //update  to db
         const updatestudent= await studentExist.save()
         if(!updatestudent){

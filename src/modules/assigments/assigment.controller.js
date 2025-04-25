@@ -88,13 +88,11 @@ export const updateAssigment= async (req,res,next) => {
         return next( new AppErorr(message.subject.notFound,404))
      }
         // prepare data
-        if(name){[
-            
-            assigmentExist.name=name,
-            assigmentExist.dueDate=dueDate,
-            assigmentExist.subjectId=subjectId, 
-            assigmentExist.classId=classId, 
-        ]}
+        assigmentExist.name = name || assigmentExist.name;
+        assigmentExist.dueDate = dueDate || assigmentExist.dueDate;
+        assigmentExist.subjectId = subjectId || assigmentExist.subjectId;
+        assigmentExist.classId = classId || assigmentExist.classId;
+
         //upload file
         if(req.file){
     
