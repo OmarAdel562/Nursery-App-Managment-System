@@ -21,7 +21,7 @@ userrouter.get('/:userId', asyncHandler(getspecificuser))
 //5-delete specific user
 userrouter.delete('/:userId',isValid(Deleteuserval), asyncHandler(Deleteuser))
 //6- get  user profile
-userrouter.delete('/profiledata',isAuthenticated(), asyncHandler(getUserprofile))
+userrouter.get('/profiledata',isAuthenticated(), asyncHandler(getUserprofile))
 
 //---------------2-signin and logout---------------------
 //1- signin
