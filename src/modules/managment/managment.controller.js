@@ -63,16 +63,13 @@ export const updateuser= async (req,res,next) => {
             return res.status(409).json({ message:message.user.alreadyExist, success: false, data: {}})
         }
         // prepare data
-        if(name){ 
-            userExist.name=name,
-            userExist.email=email,
-            userExist.password=password,
-            userExist.phone=phone,
-            userExist.DOB=DOB,
-            userExist.gander=gander,
-            userExist.age=age,
-            userExist.role=role 
-        }
+        userExist.name = name || userExist.name;
+        userExist.email = email || userExist.email;
+        userExist.phone = phone || userExist.phone;
+        userExist.DOB = DOB || userExist.DOB;
+        userExist.gander = gander || userExist.gander;
+        userExist.role = role || userExist.role;
+
         //upload file
         if(req.file){
         //upload new image
