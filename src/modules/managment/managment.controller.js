@@ -124,6 +124,26 @@ export const Deleteuser= async (req,res,next) => {
         data:{}
     })
 }
+//-----------6-get managment data-----------------------------
+export const getUserprofile = async (req, res, next) => {
+    const userId = req.user._id
+  
+    const user = await User.findById(userId).select(" profilePic name role");
+  
+    if (!user) {
+      return next(new AppErorr("User not found", 404));
+    }
+  
+    return res.status(200).json({
+      success: true,
+      data: {
+        profilePic: user.profilePic?.secure_url || null,
+        name: user.name,
+        role: user.role
+      }
+    })
+  }
+  
 //------------------------------------------------------------------------------------------
 //------------------------------------------signin and logout------------------------------------------
 //------------1-signin---
