@@ -33,7 +33,7 @@ const port= process.env.PORT || 3000
 dotenv.config({ path:path.resolve('./config/.env') })
 connectDB()
 app.use(cors({
-  origin: 'http://localhost:3000', 
+  origin: 'https://nursery-dash-board.vercel.app/', 
   credentials: true
 }))
 
