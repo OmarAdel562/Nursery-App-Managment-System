@@ -10,6 +10,6 @@ const chatrouter=Router()
 
 //----------------1-ChatBot-----------------
 //1- create message
-chatrouter.post('/ask',isAuthenticated,isAuthorized([roles.PARENT]),asyncHandler(sendToAIChatbot))
+chatrouter.post('/ask',isAuthenticated(),isAuthorized([roles.PARENT]),asyncHandler(sendToAIChatbot))
 
 export default chatrouter

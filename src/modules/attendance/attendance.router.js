@@ -13,6 +13,7 @@ const attendanceRouter = Router();
 attendanceRouter.post(
     "/createattendance",
     isAuthenticated, // Ensure the user is authenticated
+    isAuthorized(roles.STUDENT), // Ensure the user has the correct role
     upload.single("uploadedImage"), // Use multer to handle single file upload
     asyncHandler(markAttendance) // Call the controller function
 );
@@ -20,7 +21,8 @@ attendanceRouter.post(
 // 2- Leave Attendance (with file upload)
 attendanceRouter.post(
     "/leaveattendance",
-    isAuthenticated, // Ensure the user is authenticated// Ensure the user has the correct role
+    isAuthenticated, // Ensure the user is authenticated
+    isAuthorized(roles.STUDENT), // Ensure the user has the correct role
     upload.single("uploadedImage"), // Use multer to handle single file upload
     asyncHandler(leaveAttendance) // Call the controller function
 );
