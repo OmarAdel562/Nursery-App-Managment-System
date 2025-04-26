@@ -12,7 +12,7 @@ export const fileValidation ={
 }
 
 export const cloudUpload = ({ allowTyp = fileValidation.file, maxSize = 20 * 1024 * 1024 }={}) =>{
-    const storage = diskStorage({});
+    const storage = undefined;
     const fileFilter = (req, file, cb)=>{
         if(!allowTyp.includes(file.mimetype)) {
             
@@ -20,11 +20,11 @@ export const cloudUpload = ({ allowTyp = fileValidation.file, maxSize = 20 * 102
         }
         return cb(null, true)
     }
-    return multer({storage,fileFilter});
+    return multer({storage,fileFilter, limits: {fileSize: maxSize }});
 }
 
 export const cloudUploadd = ({ allowTyp = fileValidation.image, maxSize = 5 * 1024 * 1024 }={}) =>{
-    const storage = diskStorage({});
+    const storage = undefined;
     const fileFilter = (req, file, cb)=>{
         if(!allowTyp.includes(file.mimetype)) {
             
@@ -32,5 +32,6 @@ export const cloudUploadd = ({ allowTyp = fileValidation.image, maxSize = 5 * 10
         }
         return cb(null, true)
     }
-    return multer({storage,fileFilterlimits: {fileSize: maxSize }})
+    return multer({storage,fileFilter,
+        limits: {fileSize: maxSize }})
 }
