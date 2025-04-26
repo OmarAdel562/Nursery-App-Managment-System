@@ -12,7 +12,7 @@ export const fileValidation ={
 }
 
 export const cloudUpload = ({ allowTyp = fileValidation.file, maxSize = 20 * 1024 * 1024 }={}) =>{
-    const storage = undefined;
+    const storage = diskStorage({});
     const fileFilter = (req, file, cb)=>{
         if(!allowTyp.includes(file.mimetype)) {
             
@@ -24,7 +24,7 @@ export const cloudUpload = ({ allowTyp = fileValidation.file, maxSize = 20 * 102
 }
 
 export const cloudUploadd = ({ allowTyp = fileValidation.image, maxSize = 5 * 1024 * 1024 }={}) =>{
-    const storage = undefined;
+    const storage = diskStorage({});
     const fileFilter = (req, file, cb)=>{
         if(!allowTyp.includes(file.mimetype)) {
             
