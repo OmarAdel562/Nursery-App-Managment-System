@@ -7,7 +7,7 @@ import { AppErorr } from "./AppError.js";
 
 export const fileValidation ={
     image:['image/jpeg','image/png'],
-    file:['application/pdf','application/msword'],
+    file:['application/pdf','application/msword','application/octet-stream'],
     video:['video/mp4']
 }
 
