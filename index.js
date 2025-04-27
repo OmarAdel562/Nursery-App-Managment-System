@@ -32,8 +32,20 @@ const app=express()
 const port= process.env.PORT || 3000
 dotenv.config({ path:path.resolve('./config/.env') })
 connectDB()
+//cors
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://nursery-dash-board.vercel.app"
+];
+
 app.use(cors({
-  origin: 'http://localhost:3000', 
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }))
 

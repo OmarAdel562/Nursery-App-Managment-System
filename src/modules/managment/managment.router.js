@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { asyncHandler } from "../../utils/AppError.js";
 import { isValid } from "../../midderware/validation.js";
-import { adduser, Deleteuser, getallusers, getspecificuser, logout, signin, updateuser } from "./managment.controller.js";
+import { adduser, Deleteuser, getallusers, getspecificuser, getUserprofile, logout, signin, updateuser } from "./managment.controller.js";
 import { adduserVal, Deleteuserval, signinval, updateuserVal } from "./managment.validation.js";
 import { cloudUploadd } from "../../utils/multer-cloud .js";
 import { isAuthenticated } from "../../midderware/authentication.js";
+import { isAuthorized } from "../../midderware/authorization.js";
+import { roles } from "../../utils/constant/enum.js";
 
 
 const userrouter=Router()
@@ -20,7 +22,8 @@ userrouter.get('/', asyncHandler(getallusers))
 userrouter.get('/:userId', asyncHandler(getspecificuser))
 //5-delete specific user
 userrouter.delete('/:userId',isValid(Deleteuserval), asyncHandler(Deleteuser))
-
+//6- get  user profile
+userrouter.get('/mana/profiledata',isAuthenticated(),asyncHandler(getUserprofile))
 //---------------2-signin and logout---------------------
 //1- signin
 userrouter.post('/signin',isValid(signinval),asyncHandler(signin))

@@ -11,23 +11,16 @@ export const adduserVal = joi.object({
     gander:generalFields.gander.required(),
     age:generalFields.age.required(),
     role:generalFields.role.required(),
-    
-
 })
 
 export const updateuserVal = joi.object({
     userId:generalFields.objectId,
-    name:generalFields.name.required(),
-    email:generalFields.email.required(),
-    phone:generalFields.phone.required(),
-    password:generalFields.password.required(),
-    cpassword:generalFields.cpassword.required(),
-    DOB:generalFields.DOB.required(),
-    gander:generalFields.gander.required(),
-    age:generalFields.age.required(),
-    role:generalFields.role.required(),
-    
-
+    name:generalFields.name.optional(),
+    email:generalFields.email.optional(),
+    phone:generalFields.phone.optional(),
+    DOB:generalFields.DOB.optional(),
+    gander:generalFields.gander.optional(),
+    role:generalFields.role.optional(),
 })
 
 export const Deleteuserval=joi.object({

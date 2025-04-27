@@ -95,14 +95,12 @@ export const updateQuiz= async (req,res,next) => {
         return next( new AppErorr(message.subject.notFound,404))
      }
         // prepare data
-        if(title){[
-            
-            quizExist.title=title,
-            quizExist.numQuestions=numQuestions,
-            quizExist.duration=duration, 
-            quizExist.subjectId=subjectId,
-            quizExist.classId=classId,
-        ]}
+        quizExist.title = title || quizExist.title;
+        quizExist.numQuestions = numQuestions || quizExist.numQuestions;
+        quizExist.duration = duration || quizExist.duration;
+        quizExist.subjectId = subjectId || quizExist.subjectId;
+        quizExist.classId = classId || quizExist.classId;
+
     
         //update  to db
         const updatequiz= await quizExist.save()

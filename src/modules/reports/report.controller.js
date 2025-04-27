@@ -49,11 +49,9 @@ export const updateReport= async (req,res,next) => {
         return next( new AppErorr(message.student.notFound,404))
      }
         // prepare data
-        if(report){[
-            
-            reportExist.report=report,
-            reportExist.studentId=studentId, 
-        ]}
+        reportExist.report = report || reportExist.report;
+        reportExist.studentId = studentId || reportExist.studentId;
+
     
         //update  to db
         const updatereport= await reportExist.save()

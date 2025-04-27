@@ -9,9 +9,9 @@ export const addMaterialVal = joi.object({
 })
 export const updateMaterialVal = joi.object({
     materialId:generalFields.objectId,
-    name:generalFields.name.required(),
-    subjectId:generalFields.objectId,
-    classId:generalFields.objectId,
+    name:generalFields.name.optional(),
+    subjectId:generalFields.objectId.optional(),
+    classId:generalFields.objectId.optional(),
 })
 export const DeleteMaterialval=joi.object({
     materialId:generalFields.objectId

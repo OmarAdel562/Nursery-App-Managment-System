@@ -48,13 +48,11 @@ export const updateQuestion= async (req,res,next) => {
         return next( new AppErorr(message.subject.notFound,404))
      }
         // prepare data
-        if(question){[
-            
-            questionExist.question=question,
-            questionExist.options=options,
-            questionExist.correctAnswer=correctAnswer,
-            questionExist.subjectId=subjectId, 
-        ]}
+        questionExist.question = question || questionExist.question;
+        questionExist.options = options || questionExist.options;
+        questionExist.correctAnswer = correctAnswer || questionExist.correctAnswer;
+        questionExist.subjectId = subjectId || questionExist.subjectId;
+
         //update  to db
         const updatequestion= await questionExist.save()
         if(!updatequestion){

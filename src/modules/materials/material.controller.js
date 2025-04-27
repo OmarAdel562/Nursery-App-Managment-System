@@ -87,12 +87,10 @@ export const addMaterial=async(req,res,next) =>{
         return next( new AppErorr(message.subject.notFound,404))
      }
         // prepare data
-        if(name){[
-            
-            materialExist.name=name,
-            materialExist.subjectId=subjectId, 
-            materialExist.classId=classId,
-        ]}
+        materialExist.name = name || materialExist.name;
+        materialExist.subjectId = subjectId || materialExist.subjectId;
+        materialExist.classId = classId || materialExist.classId;
+
         //upload file
         if(req.file){
     
