@@ -1,4 +1,4 @@
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 import { Subject } from "../../../db/models/Subject.model.js"
 import { Quiz } from "../../../db/models/Quiz.model.js"
@@ -15,32 +15,32 @@ export const addQuiz=async(req,res,next) =>{
     //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
      //   ckeck classexistance
     const classExist = await Class.findById(classId);
     if (!classExist) {
-        return next(new AppErorr(message.class.notFound, 404));
+        return next(new AppError (message.class.notFound, 404));
     }
      //check titleexistance
      const titleExist=await Quiz.findOne({title})
      if(titleExist){
-        return next( new AppErorr(message.quiz.alreadyExist,409))
+        return next( new AppError (message.quiz.alreadyExist,409))
      }
     if (numQuestions <= 0) {
-        return next( new AppErorr(message.question.must,400))
+        return next( new AppError (message.question.must,400))
     }
         const totalQuestions = await Question.countDocuments();
 
     if (totalQuestions < numQuestions) {
-        return next(new AppErorr(message.question.notenough, 404));
+        return next(new AppError (message.question.notenough, 404));
     }
     
     const questions = await Question.aggregate([ 
         { $sample: { size: numQuestions } } 
     ])
     // if (questions.length ==! numQuestions) {
-    //     return next( new AppErorr(message.question.notenough,400))
+    //     return next( new AppError (message.question.notenough,400))
     // }
      //prepare data
     const newQuiz = new Quiz({
@@ -54,7 +54,7 @@ export const addQuiz=async(req,res,next) =>{
      //add to db
       const createdQuiz= await newQuiz.save();
         if(!createdQuiz){
-            return next( new AppErorr(message.quiz.fileToCreate,500))
+            return next( new AppError (message.quiz.fileToCreate,500))
          }
          
       const students = await Student.find({ classId }).select("userId")
@@ -77,22 +77,22 @@ export const updateQuiz= async (req,res,next) => {
         //check existance
         const quizExist= await Quiz.findById(quizId)
         if(!quizExist){
-            return next( new AppErorr(message.quiz.notFound,404))
+            return next( new AppError (message.quiz.notFound,404))
         }
          //   ckeck classexistance
     const classExist = await Class.findById(classId);
     if (!classExist) {
-        return next(new AppErorr(message.class.notFound, 404));
+        return next(new AppError (message.class.notFound, 404));
     }
         //check nameexistance
         const titleExist= await Quiz.findOne({title,_id:{$ne:quizId }})
         if(titleExist){
-            return next( new AppErorr(message.quiz.alreadyExist,404))
+            return next( new AppError (message.quiz.alreadyExist,404))
         }
         //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
         // prepare data
         quizExist.title = title || quizExist.title;
@@ -105,7 +105,7 @@ export const updateQuiz= async (req,res,next) => {
         //update  to db
         const updatequiz= await quizExist.save()
         if(!updatequiz){
-            return next( new AppErorr(message.quiz.fileToUpdate,500))
+            return next( new AppError (message.quiz.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -127,7 +127,7 @@ export const getspecificQuiz= async (req,res,next) => {
     const quiz=await Quiz.findById(quizId).select('-createdBy -createdAt -updatedAt -__v')   
     quiz?
     res.status(200).json( {message:"get successfully",success:true,data:quiz})
-        : next (new AppErorr(message.quiz.notFound,404))
+        : next (new AppError (message.quiz.notFound,404))
 }
 //-------------5-delete quiz-------------------------------------
 export const DeleteQuiz= async (req,res,next) => {
@@ -135,7 +135,7 @@ export const DeleteQuiz= async (req,res,next) => {
     const { quizId } =req.params
         const quiz = await Quiz.findByIdAndDelete(quizId);
         if (!quiz) {
-          return next(new AppErorr(message.quiz.notFound, 404));
+          return next(new AppError (message.quiz.notFound, 404));
         }
        //send response
        return res.status(200).json({
@@ -163,7 +163,7 @@ export const startQuiz = async (req, res, next) => {
     // checkexistance
     const quiz = await Quiz.findById(quizId)
     if (!quiz) {
-        return next(new AppErorr(message.quiz.notFound, 404));
+        return next(new AppError (message.quiz.notFound, 404));
     }
     //  
     const newAttempt = new QuizAttempts({
@@ -182,7 +182,7 @@ export const EndQuiz = async (req, res, next) => {
   
     const quiz = await Quiz.findById(quizId).populate("questions");
     if (!quiz) {
-      return next(new AppErorr(message.question.notFound, 404));
+      return next(new AppError (message.question.notFound, 404));
     }
     let score = 0;
     for (const question of quiz.questions) {

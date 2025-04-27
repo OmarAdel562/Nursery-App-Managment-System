@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { User } from "../../../db/models/User.model.js"
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError } from '../../utils/AppError.js';
 import { message } from "../../utils/constant/messages.js"
 import cloudinary from '../../utils/cloud.js'
 import { generateToken } from '../../utils/token.js'
@@ -38,7 +38,7 @@ export const adduser=async(req,res,next) =>{
      if(!createdUser){
         // rollback 
         req.fileImage = {secure_url,public_id}
-        return next( new AppErorr(message.user.fileToCreate,500))
+        return next( new AppError (message.user.fileToCreate,500))
      }
     //  //generate token
      const token= generateToken({payload:{email,_id:createdUser._id}})
@@ -82,7 +82,7 @@ export const updateuser= async (req,res,next) => {
         //update  to db
         const updateuser= await userExist.save()
         if(!updateuser){
-            return next( new AppErorr(message.user.fileToUpdate,500))
+            return next( new AppError (message.user.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -104,7 +104,7 @@ export const getspecificuser= async (req,res,next) => {
     const user=await User.findById(userId).select('-createdAt -updatedAt -__v');
     user?
     res.status(200).json({ message:"get successfully",success:true,data:user})
-        : next (new AppErorr(message.user.notFound,404))
+        : next (new AppError (message.user.notFound,404))
 }
 //-------------5-deleteuser-------------------------------------
 export const Deleteuser= async (req,res,next) => {
@@ -112,7 +112,7 @@ export const Deleteuser= async (req,res,next) => {
     const { userId } =req.params
         const user = await User.findByIdAndDelete(userId);
         if (!user) {
-          return next(new AppErorr(message.user.notFound, 404));
+          return next(new AppError (message.user.notFound, 404));
         }
        //send response
        return res.status(200).json({
@@ -127,7 +127,7 @@ export const getUserprofile = async (req, res, next) => {
   
     const user = await User.findById(userId).select(" profilePic name role");
     if (!user) {
-      return next(new AppErorr("User not found", 404))
+      return next(new AppError ("User not found", 404))
     }
     return res.status(200).json({
       success: true,

@@ -1,6 +1,6 @@
 //import modules
 import joi from "joi";
-import { AppErorr } from "../utils/AppError.js";
+import { AppError } from "../utils/AppError.js";
 import { attendancestatus, roles } from "../utils/constant/enum.js";
 
 const parseArray=(value,helper) =>{
@@ -50,7 +50,7 @@ export const isValid = (schema) =>{
         if(error){
              const errArr=[]
              error.details.forEach((err)=>{errArr.push(err.message) })
-            return next(new AppErorr (errArr,400))
+            return next(new AppError (errArr,400))
         }
         next ()
     }

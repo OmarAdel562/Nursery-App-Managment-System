@@ -7,7 +7,7 @@ import { Quiz } from "../../../db/models/Quiz.model.js"
 import { Schedule } from "../../../db/models/Schedule.model.js"
 import { Student } from "../../../db/models/Student.model.js"
 import { User } from "../../../db/models/User.model.js"
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 
 
@@ -22,12 +22,12 @@ export const addStudent=async(req,res,next) =>{
     //check existance
     const studentExist=await Student.findOne({userId})
     if(studentExist){
-       return next( new AppErorr(message.user.alreadyExist,409))
+       return next( new AppError (message.user.alreadyExist,409))
     }
      //check userexistance
      const userExist=await User.findById(userId)
      if(!userExist){
-        return next( new AppErorr(message.user.notFound,404))
+        return next( new AppError (message.user.notFound,404))
      }
      
     //prepare data
@@ -41,7 +41,7 @@ export const addStudent=async(req,res,next) =>{
      //add to db
      const createdstudent=await student.save()
      if(!createdstudent){
-        return next( new AppErorr(message.student.fileToCreate,500))
+        return next( new AppError (message.student.fileToCreate,500))
      }
      return res.status(201).json({message:message.student.createsuccessfully,
         success:true,
@@ -58,12 +58,12 @@ export const updateStudent= async (req,res,next) => {
         //check existance
         const studentExist= await Student.findById(studentId)
         if(!studentExist){
-            return next( new AppErorr(message.student.notFound,404))
+            return next( new AppError (message.student.notFound,404))
         }
         //check userexistance
           const userExist=await User.findById(userId)
            if(!userExist){
-            return next( new AppErorr(message.user.notFound,404))
+            return next( new AppError (message.user.notFound,404))
           }
         // prepare data
         studentExist.userId = userId || studentExist.userId;
@@ -73,7 +73,7 @@ export const updateStudent= async (req,res,next) => {
         //update  to db
         const updatestudent= await studentExist.save()
         if(!updatestudent){
-            return next( new AppErorr(message.student.fileToUpdate,500))
+            return next( new AppError (message.student.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -103,7 +103,7 @@ export const getspecificStudent= async (req,res,next) => {
     .select("_id userId classId subjectes ")
     student?
     res.status(200).json({ message:"get successfully", success:true,data:student})
-        : next (new AppErorr(message.student.notFound,404))
+        : next (new AppError (message.student.notFound,404))
 }
 //-------------5-delete Student-------------------------------------
 export const DeleteStudent= async (req,res,next) => {
@@ -111,7 +111,7 @@ export const DeleteStudent= async (req,res,next) => {
     const { studentId } =req.params
         const student = await Student.findByIdAndDelete(studentId);
         if (!student) {
-          return next(new AppErorr(message.student.notFound, 404));
+          return next(new AppError (message.student.notFound, 404));
         }
        //send response
        return res.status(200).json({
@@ -128,7 +128,7 @@ export const getStudentData = async (req, res, next) => {
     .populate({ path: 'classId',select: 'name'})
     // check student existance
     if (!student) {
-        return next( new AppErorr(message.student.notFound,404))
+        return next( new AppError (message.student.notFound,404))
     }
      //send response
     res.status(200).json({
@@ -148,7 +148,7 @@ export const getStudentSchedule = async (req, res, next) => {
     const studentSchedule = await Schedule.findOne({ userId: studentId }).select("image")
     // check schedule existance
     if (!studentSchedule) {
-        return next(new AppErorr(message.schedule.notFound, 404))
+        return next(new AppError (message.schedule.notFound, 404))
     }
      //send response
     res.status(200).json({
@@ -163,7 +163,7 @@ export const getStudentGrades = async (req, res, next) => {
     // check student existance
     const student = await Student.findOne({ userId: studentId }).populate("userId", "name");
     if (!student) {
-        return next(new AppErorr(message.student.notFound, 404));
+        return next(new AppError (message.student.notFound, 404));
     }
 
     // get data
@@ -174,7 +174,7 @@ export const getStudentGrades = async (req, res, next) => {
         .select("score max_score subjectId quizId assigmentId");
 
     if (grades.length === 0) {
-        return next(new AppErorr(message.grade.notFound, 404));
+        return next(new AppError (message.grade.notFound, 404));
     }
 
     // restructure response
@@ -223,7 +223,7 @@ export const getStudentSubjects = async (req, res, next) => {
     // check student existance
     const student = await Student.findOne({ userId: studentId }).populate("subjectes");
     if (!student) {
-        return next(new AppErorr(message.student.notFound, 404))
+        return next(new AppError (message.student.notFound, 404))
     }
     // send response
     return res.status(200).json({
@@ -242,7 +242,7 @@ export const getStudentNotifications = async (req, res, next) => {
     // check student existance
   const student = await Student.findOne({ userId: studentId })
   if (!student) {
-    return next(new AppErorr(message.student.notFound, 404))
+    return next(new AppError (message.student.notFound, 404))
   }
 
   // get data
@@ -254,7 +254,7 @@ export const getStudentNotifications = async (req, res, next) => {
   }).sort({ createdAt: -1 })
 
   if (notifications.length === 0) {
-    return next(new AppErorr(message.notification.notFound, 404))
+    return next(new AppError (message.notification.notFound, 404))
   }
   // send response
   res.status(200).json({
@@ -274,7 +274,7 @@ export const getStudentSubjectsWithTasks = async (req, res, next) => {
     const student = await Student.findOne({ userId: req.authUser._id }).populate("subjectes");
      // check student existance
   if (!student) {
-    return next(new AppErorr(message.student.notFound, 404))
+    return next(new AppError (message.student.notFound, 404))
   }
   
     const response = [];
@@ -305,7 +305,7 @@ export const getStudentGradesInSubject = async (req, res, next) => {
 
   const student = await Student.findOne({ userId: req.authUser._id });
   if (!student) {
-    return next(new AppErorr(message.student.notFound, 404));
+    return next(new AppError (message.student.notFound, 404));
   }
 
   // 
@@ -316,7 +316,7 @@ export const getStudentGradesInSubject = async (req, res, next) => {
     .select("score max_score subjectId quizId assigmentId");
 
   if (!grades.length) {
-    return next(new AppErorr(message.grade.notFound, 404));
+    return next(new AppError (message.grade.notFound, 404));
   }
 
   const subjectName = grades[0]?.subjectId?.name || "Unknown Subject";

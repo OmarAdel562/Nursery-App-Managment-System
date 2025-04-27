@@ -1,6 +1,6 @@
 //import modules
 import multer,{ diskStorage } from "multer";
-import { AppErorr } from "./AppError.js";
+import { AppError  } from "./AppError.js";
 
 
 
@@ -16,7 +16,7 @@ export const cloudUpload = ({ allowTyp = fileValidation.file, maxSize = 20 * 102
     const fileFilter = (req, file, cb)=>{
         if(!allowTyp.includes(file.mimetype)) {
             
-            return cb(new AppErorr('invalid file format',400),false)
+            return cb(new AppError ('invalid file format',400),false)
         }
         return cb(null, true)
     }
@@ -28,7 +28,7 @@ export const cloudUploadd = ({ allowTyp = fileValidation.image, maxSize = 5 * 10
     const fileFilter = (req, file, cb)=>{
         if(!allowTyp.includes(file.mimetype)) {
             
-            return cb(new AppErorr('invalid file format',400),false)
+            return cb(new AppError ('invalid file format',400),false)
         }
         return cb(null, true)
     }

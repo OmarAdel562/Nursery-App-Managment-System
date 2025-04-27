@@ -1,4 +1,4 @@
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 import cloudinary from '../../utils/cloud.js'
 import { Material } from '../../../db/models/Material.models.js'
@@ -17,19 +17,19 @@ export const addMaterial=async(req,res,next) =>{
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
         console.log("Subject not found");
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
      //   ckeck classexistance
          const classExist = await Class.findById(classId);
          if (!classExist) {
             console.log("Class not found");
-             return next(new AppErorr(message.class.notFound, 404));
+             return next(new AppError (message.class.notFound, 404));
          }
      //check nameexistance
      const nameExist=await Material.findOne({name})
      if(nameExist){
         console.log("Material name already exists");
-        return next( new AppErorr(message.material.alreadyExist,409))
+        return next( new AppError (message.material.alreadyExist,409))
      }
      console.log("Material name is unique");
     //prepare data
@@ -52,7 +52,7 @@ export const addMaterial=async(req,res,next) =>{
         console.log("Failed to create material, rolling back file upload");
         // rollback 
         req.fileImage = {secure_url,public_id}
-        return next( new AppErorr(message.material.fileToCreate,500))
+        return next( new AppError (message.material.fileToCreate,500))
      }
      console.log("Material created successfully");
     //    
@@ -77,22 +77,22 @@ export const addMaterial=async(req,res,next) =>{
         //check existance
         const materialExist= await Material.findById(materialId)
         if(!materialExist){
-            return next( new AppErorr(message.material.notFound,404))
+            return next( new AppError (message.material.notFound,404))
         }
         //   ckeck classexistance
         const classExist = await Class.findById(classId);
         if (!classExist) {
-            return next(new AppErorr(message.class.notFound, 404));
+            return next(new AppError (message.class.notFound, 404));
         }
         //check nameexistance
         const nameExist= await Material.findOne({name,_id:{$ne:materialId }})
         if(nameExist){
-            return next( new AppErorr(message.material.alreadyExist,404))
+            return next( new AppError (message.material.alreadyExist,404))
         }
         //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
         // prepare data
         materialExist.name = name || materialExist.name;
@@ -112,7 +112,7 @@ export const addMaterial=async(req,res,next) =>{
         //update  to db
         const updatematerial= await materialExist.save()
         if(!updatematerial){
-            return next( new AppErorr(message.material.fileToUpdate,500))
+            return next( new AppError (message.material.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -134,7 +134,7 @@ export const getspecificMaterial= async (req,res,next) => {
     const material=await Material.findById(materialId).select('-createdBy -createdAt -updatedAt -__v')
     material?
     res.status(200).json({message:"get successfully", success:true,data:material})
-        : next (new AppErorr(message.material.notFound,404))
+        : next (new AppError (message.material.notFound,404))
 }
 //-------------5-deleteMaterial-------------------------------------
 export const DeleteMaterial= async (req,res,next) => {
@@ -142,7 +142,7 @@ export const DeleteMaterial= async (req,res,next) => {
     const { materialId } =req.params
         const material = await Material.findByIdAndDelete(materialId);
         if (!material) {
-          return next(new AppErorr(message.material.notFound, 404));
+          return next(new AppError (message.material.notFound, 404));
         }
        //send response
        return res.status(200).json({

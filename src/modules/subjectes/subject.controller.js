@@ -1,5 +1,5 @@
 import { Subject } from "../../../db/models/Subject.model.js"
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 
 
@@ -11,7 +11,7 @@ export const Createsubject=async(req,res,next) =>{
      //check existance
      const subjectExist=await Subject.findOne({name})
      if(subjectExist){
-        return next( new AppErorr(message.subject.alreadyExist,409))
+        return next( new AppError (message.subject.alreadyExist,409))
      }
     //prepare data
      const subject= new Subject({
@@ -22,7 +22,7 @@ export const Createsubject=async(req,res,next) =>{
      //add to db
      const createdsubject=await subject.save()
      if(!createdsubject){
-        return next(new AppErorr(message.subject.fileToCreate,500))
+        return next(new AppError (message.subject.fileToCreate,500))
      }
      return res.status(201).json({message:message.subject.createsuccessfully,
         success:true,
@@ -39,12 +39,12 @@ export const updatesubject= async (req,res,next) => {
         //check existance
         const subjectExist= await Subject.findById(subjectId)
         if(!subjectExist){
-            return next( new AppErorr(message.subject.notFound,404))
+            return next( new AppError (message.subject.notFound,404))
         }
         //check name existance
         const nameExist= await Subject.findOne({name,_id:{$ne:subjectId }})
         if(nameExist){
-            return next( new AppErorr(message.subject.alreadyExist,409))
+            return next( new AppError (message.subject.alreadyExist,409))
         }
         // prepare data
         subjectExist.name = name || subjectExist.name;
@@ -54,7 +54,7 @@ export const updatesubject= async (req,res,next) => {
         //update  to db
         const updatesubject= await subjectExist.save()
         if(!updatesubject){
-            return next( new AppErorr(message.subject.fileToUpdate,500))
+            return next( new AppError (message.subject.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -82,7 +82,7 @@ export const getspecificsubject= async (req,res,next) => {
     ])
     subject?
     res.status(200).json({ message:"get successfully",success:true,data:subject})
-    : next (new AppErorr(message.subject.notFound,404))
+    : next (new AppError (message.subject.notFound,404))
 }
 //-------------5-deletesubject-------------------------------------
 export const Deletesubject= async (req,res,next) => {
@@ -90,7 +90,7 @@ export const Deletesubject= async (req,res,next) => {
     const { subjectId } =req.params
         const subject = await Subject.findByIdAndDelete(subjectId);
         if (!subject) {
-          return next(new AppErorr(message.subject.notFound, 404));
+          return next(new AppError (message.subject.notFound, 404));
         }
        //send response
        return res.status(200).json({
