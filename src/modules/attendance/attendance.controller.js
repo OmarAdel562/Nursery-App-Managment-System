@@ -14,7 +14,7 @@ export const upload = multer({ storage });
 // Utility to validate ObjectId
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
-// Mark Attendance Controller
+// -----------Mark Attendance Controller--------------
 export const markAttendance = async (req, res, next) => {
     try {
         const { userId } = req.body;
