@@ -2,7 +2,7 @@ import { deleteCloudFile } from "./cloud.js"
 import { deleteCloud } from "./file-function.js"
 
 
-export default class AppErorr extends Error {
+export  class AppErorr extends Error {
     constructor(message , statusCode) {
         super (message)
         this.statusCode=statusCode
