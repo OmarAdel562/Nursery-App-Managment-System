@@ -1,6 +1,6 @@
 //import modules
 import multer,{ diskStorage } from "multer";
-import { AppErorr } from "./AppErrorr.js";
+import { AppErorr } from "./AppError.js";
 
 
 
