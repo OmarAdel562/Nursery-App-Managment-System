@@ -44,16 +44,16 @@ export const markAttendance = async (req, res, next) => {
         // Step 4: Upload the uploaded image to Cloudinary
         let uploadedImageUrl;
         try {
-            const uploadResponse = await cloudinary.uploader.upload_stream({
-                    folder: 'attendance_images',
-                },
-                (error, result) => {
-                    if (error) {
-                        throw error;
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: 'attendance_images' },
+                    (error, result) => {
+                        if (error) return reject(error);
+                        resolve(result);
                     }
-                    return result;
-                }
-            ).end(file.buffer); // Use file buffer for upload
+                );
+                stream.end(file.buffer); // send buffer to the stream
+            });
             uploadedImageUrl = uploadResponse.secure_url;
         } catch (cloudinaryError) {
             console.error('Cloudinary Upload Error:', cloudinaryError.message);
@@ -142,16 +142,16 @@ export const leaveAttendance = async (req, res, next) => {
         // Step 4: Upload the uploaded image to Cloudinary
         let uploadedImageUrl;
         try {
-            const uploadResponse = await cloudinary.uploader.upload_stream({
-                    folder: 'attendance_images',
-                },
-                (error, result) => {
-                    if (error) {
-                        throw error;
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: 'attendance_images' },
+                    (error, result) => {
+                        if (error) return reject(error);
+                        resolve(result);
                     }
-                    return result;
-                }
-            ).end(file.buffer); // Use file buffer for upload
+                );
+                stream.end(file.buffer); // send buffer to the stream
+            });
             uploadedImageUrl = uploadResponse.secure_url;
         } catch (cloudinaryError) {
             console.error('Cloudinary Upload Error:', cloudinaryError.message);
