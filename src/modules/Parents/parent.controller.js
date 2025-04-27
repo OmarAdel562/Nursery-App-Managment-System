@@ -1,5 +1,5 @@
 import { User } from "../../../db/models/User.model.js"
-import { AppErorr } from "../../utils/AppError.js"
+import { AppErorr } from "../../utils/AppErrorr.js"
 import { message } from "../../utils/constant/messages.js"
 import { Parent } from "../../../db/models/Parent.model.js"
 import { Student } from "../../../db/models/Student.model.js"

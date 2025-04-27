@@ -1,5 +1,5 @@
 import { Class } from "../../../db/models/Class.model.js"
-import { AppErorr } from "../../utils/AppError.js"
+import { AppErorr } from "../../utils/AppErrorr.js"
 import { message } from "../../utils/constant/messages.js"
 
 

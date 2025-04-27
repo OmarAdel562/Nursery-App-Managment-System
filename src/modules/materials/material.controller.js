@@ -1,4 +1,4 @@
-import { AppErorr } from "../../utils/AppError.js"
+import { AppErorr } from "../../utils/AppErrorr.js"
 import { message } from "../../utils/constant/messages.js"
 import cloudinary from '../../utils/cloud.js'
 import { Material } from '../../../db/models/Material.models.js'

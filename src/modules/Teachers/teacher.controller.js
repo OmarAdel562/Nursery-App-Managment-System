@@ -4,7 +4,7 @@ import { Schedule } from "../../../db/models/Schedule.model.js"
 import { Student } from "../../../db/models/Student.model.js"
 import { Teacher } from "../../../db/models/Teacher.model.js"
 import { User } from "../../../db/models/User.model.js"
-import { AppErorr } from "../../utils/AppError.js"
+import { AppErorr } from "../../utils/AppErrorr.js"
 import { message } from "../../utils/constant/messages.js"
 
 
