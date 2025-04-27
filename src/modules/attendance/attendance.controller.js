@@ -112,7 +112,7 @@ export const markAttendance = async (req, res, next) => {
         return next(new AppError(error.message || 'Internal server error', 500));
     }
 };
-// Leave Attendance Controller
+//---------------- Leave Attendance Controller-----------------------
 export const leaveAttendance = async (req, res, next) => {
     try {
         const { userId } = req.body;
