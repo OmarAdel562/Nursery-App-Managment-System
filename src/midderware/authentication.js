@@ -1,4 +1,4 @@
-import { AppErorr } from "../utils/AppError.js"
+import { AppError  } from "../utils/AppError.js"
 import { verifyToken } from "../utils/token.js"
 import { message } from "../utils/constant/messages.js"
 import { User } from "../../db/models/User.model.js"
@@ -13,13 +13,13 @@ export const isAuthenticated = () =>{
         //decoded token
         const payload= verifyToken({token})
         if( payload.message){
-            return next (new AppErorr(payload.message,401))
+            return next (new AppError (payload.message,401))
         }
         
         //check user exist
         const authUser= await User.findOne({_id:payload._id })
         if(!authUser){
-            return next(new AppErorr(message.user.notFound,404))
+            return next(new AppError (message.user.notFound,404))
         }
         req.authUser=authUser
         next()

@@ -4,8 +4,8 @@ import { Attendance } from '../../../db/models/Attendance.model.js';
 import { message } from '../../utils/constant/messages.js';
 import axios from 'axios';
 import { User } from '../../../db/models/User.model.js';
-import AppError from '../../utils/AppError.js';
 import mongoose from 'mongoose';
+import { AppError } from '../../utils/AppError.js';
 
 // Configure Multer for file upload
 const storage = multer.memoryStorage(); // Store files in memory

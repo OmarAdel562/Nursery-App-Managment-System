@@ -1,4 +1,4 @@
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 import cloudinary from '../../utils/cloud.js'
 import { Subject } from "../../../db/models/Subject.model.js"
@@ -15,17 +15,17 @@ export const addAssigment=async(req,res,next) =>{
      //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
      //   ckeck classexistance
      const classExist = await Class.findById(classId);
      if (!classExist) {
-         return next(new AppErorr(message.class.notFound, 404));
+         return next(new AppError (message.class.notFound, 404));
      }
      //check nameexistance
      const nameExist=await Assigment.findOne({name})
      if(nameExist){
-        return next( new AppErorr(message.assigment.alreadyExist,409))
+        return next( new AppError (message.assigment.alreadyExist,409))
      }
     //prepare data
     //upload file
@@ -46,7 +46,7 @@ export const addAssigment=async(req,res,next) =>{
      if(!createdassigment){
         // rollback 
         req.fileImage = {secure_url,public_id}
-        return next( new AppErorr(message.assigment.fileToCreate,500))
+        return next( new AppError (message.assigment.fileToCreate,500))
      }
      //    
          const students = await Student.find({ classId }).select("userId");
@@ -70,22 +70,22 @@ export const updateAssigment= async (req,res,next) => {
         //check existance
         const assigmentExist= await Assigment.findById(assigmentId)
         if(!assigmentExist){
-            return next( new AppErorr(message.assigment.notFound,404))
+            return next( new AppError (message.assigment.notFound,404))
         }
         //   ckeck classexistance
         const classExist = await Class.findById(classId);
         if (!classExist) {
-            return next(new AppErorr(message.class.notFound, 404));
+            return next(new AppError (message.class.notFound, 404));
         }
         //check nameexistance
         const nameExist= await Assigment.findOne({name,_id:{$ne:assigmentId }})
         if(nameExist){
-            return next( new AppErorr(message.assigment.alreadyExist,404))
+            return next( new AppError (message.assigment.alreadyExist,404))
         }
         //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
         // prepare data
         assigmentExist.name = name || assigmentExist.name;
@@ -106,7 +106,7 @@ export const updateAssigment= async (req,res,next) => {
         //update  to db
         const updateassigment= await assigmentExist.save()
         if(!updateassigment){
-            return next( new AppErorr(message.assigment.fileToUpdate,500))
+            return next( new AppError (message.assigment.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -128,7 +128,7 @@ export const getspecificAssigment= async (req,res,next) => {
     const assigment=await Assigment.findById(assigmentId).select('-createdBy -createdAt -updatedAt -__v')
     assigment?
     res.status(200).json({message:"get successfully", success:true,data:assigment})
-        : next (new AppErorr(message.assigment.notFound,404))
+        : next (new AppError (message.assigment.notFound,404))
 }
 //-------------5-deleteAssigment-------------------------------------
 export const DeleteAssigment= async (req,res,next) => {
@@ -136,7 +136,7 @@ export const DeleteAssigment= async (req,res,next) => {
     const { assigmentId } =req.params
         const assigment = await Assigment.findByIdAndDelete(assigmentId);
         if (!assigment) {
-          return next(new AppErorr(message.assigment.notFound, 404));
+          return next(new AppError (message.assigment.notFound, 404));
         }
        //send response
        return res.status(200).json({
