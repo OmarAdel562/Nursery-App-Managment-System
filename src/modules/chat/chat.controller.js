@@ -6,7 +6,7 @@ export const sendToAIChatbot = async (req, res, next) => {
   if (!message) {
     return res.status(400).json({ status: 'error', message: 'Message is required' })
   }
-
+//api done
   const response = await axios.post('http://82.25.101.221:5001/chat', { message })
 
   return res.status(200).json({
