@@ -2,10 +2,10 @@ import axios from 'axios';
 import cloudinary from 'cloudinary';
 
 export const analyzePronunciation = async (req, res, next) => {
-  const { word } = req.body;
+  const { word,lang } = req.body;
   const audioFile = req.files.audio; // Assuming your audio file field is named 'audio'
 
-  if (!audioFile || !word) {
+  if (!audioFile || !word || !lang) {
     return res.status(400).json({ status: 'error', message: 'An audio file and a word are required' });
   }
   try {
@@ -20,6 +20,7 @@ export const analyzePronunciation = async (req, res, next) => {
     const response = await axios.post('http://localhost:5000/analyze', {
       audio_url,
       word,
+      lang,
     });
 
     return res.status(200).json({
