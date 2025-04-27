@@ -4,10 +4,6 @@ import { Attendance } from '../../../db/models/Attendance.model.js';
 import { message } from '../../utils/constant/messages.js';
 import axios from 'axios';
 import { User } from '../../../db/models/User.model.js';
-<<<<<<< HEAD
-import {AppError} from '../../utils/AppError.js';
-=======
->>>>>>> 6a3c22139deb3f2bb08e336dedc436387d1984bd
 import mongoose from 'mongoose';
 import { AppError } from '../../utils/AppError.js';
 

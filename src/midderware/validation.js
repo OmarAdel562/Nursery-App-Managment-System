@@ -1,10 +1,6 @@
 //import modules
 import joi from "joi";
-<<<<<<< HEAD
-import  {AppErorr}  from "../utils/AppError.js";
-=======
-import { AppError } from "../utils/AppError.js";
->>>>>>> 6a3c22139deb3f2bb08e336dedc436387d1984bd
+import  { AppError}  from "../utils/AppError.js";
 import { attendancestatus, roles } from "../utils/constant/enum.js";
 
 const parseArray=(value,helper) =>{
