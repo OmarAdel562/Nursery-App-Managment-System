@@ -11,27 +11,33 @@ import { Student } from "../../../db/models/Student.model.js"
 //--------------------------1-add Material------------------------
 export const addMaterial=async(req,res,next) =>{
     //get data from req
-     let {name , subjectId,classId}=req.body
+     let {name , file,subjectId,classId}=req.body
+     console.log("Received data:", { name, subjectId, classId });
      //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
+        console.log("Subject not found");
         return next( new AppErorr(message.subject.notFound,404))
      }
      //   ckeck classexistance
          const classExist = await Class.findById(classId);
          if (!classExist) {
+            console.log("Class not found");
              return next(new AppErorr(message.class.notFound, 404));
          }
      //check nameexistance
      const nameExist=await Material.findOne({name})
      if(nameExist){
+        console.log("Material name already exists");
         return next( new AppErorr(message.material.alreadyExist,409))
      }
+     console.log("Material name is unique");
     //prepare data
     //upload file
     const {secure_url,public_id} = await cloudinary.uploader.upload(req.file.path,{
         folder:'ursery-app/material'
     })
+    console.log("File uploaded:", { secure_url, public_id });
     
      const materialer= new Material({
         name,
@@ -43,10 +49,12 @@ export const addMaterial=async(req,res,next) =>{
      //add to db
      const createdmaterial=await materialer.save()
      if(!createdmaterial){
+        console.log("Failed to create material, rolling back file upload");
         // rollback 
         req.fileImage = {secure_url,public_id}
         return next( new AppErorr(message.material.fileToCreate,500))
      }
+     console.log("Material created successfully");
     //    
     const students = await Student.find({ classId }).select("userId");
     const studentIds = students.map(student => student.userId);

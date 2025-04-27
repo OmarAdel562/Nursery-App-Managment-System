@@ -29,8 +29,8 @@ import pronunciationrouter from './src/modules/pronunciation/pronunciation.route
 
 //create server
 const app=express()
-const port= process.env.PORT || 3000
 dotenv.config({ path:path.resolve('./config/.env') })
+const port= process.env.PORT || 3000
 connectDB()
 //cors
 const allowedOrigins = [
