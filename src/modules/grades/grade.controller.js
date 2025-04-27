@@ -1,4 +1,4 @@
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 import { Subject } from "../../../db/models/Subject.model.js"
 import { Grade } from "../../../db/models/Grade.model.js"
@@ -13,12 +13,12 @@ export const addGrade=async(req,res,next) =>{
      //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
      //check userexistance
      const studentExist=await Student.findById(studentId)
      if(!studentExist){
-        return next( new AppErorr(message.student.notFound,404))
+        return next( new AppError (message.student.notFound,404))
      }
     //prepare data
     
@@ -34,7 +34,7 @@ export const addGrade=async(req,res,next) =>{
      //add to db
      const createdgrade=await grade.save()
      if(!createdgrade){
-        return next( new AppErorr(message.grade.fileToCreate,500))
+        return next( new AppError (message.grade.fileToCreate,500))
      }
      return res.status(201).json({message:message.grade.createsuccessfully,
         success:true,
@@ -51,12 +51,12 @@ export const updateGrade= async (req,res,next) => {
         //check existance
         const gradeExist= await Grade.findById(gradeId)
         if(!gradeExist){
-            return next( new AppErorr(message.grade.notFound,404))
+            return next( new AppError (message.grade.notFound,404))
         }
         //check existance
         const subjectExist=await Subject.findById(subjectId)
         if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
         // prepare data
         gradeExist.studentId = studentId || gradeExist.studentId;
@@ -70,7 +70,7 @@ export const updateGrade= async (req,res,next) => {
         //update  to db
         const updategrade= await gradeExist.save()
         if(!updategrade){
-            return next( new AppErorr(message.grade.fileToUpdate,500))
+            return next( new AppError (message.grade.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -92,7 +92,7 @@ export const getallGrade= async (req,res,next) => {
     const grade=await Grade.findById(gradeId).select('-createdBy -createdAt -updatedAt -__v')   
     grade?
     res.status(200).json({message:"get successfully", success:true,data:grade})
-        : next (new AppErorr(message.grade.notFound,404))
+        : next (new AppError (message.grade.notFound,404))
 }
 //-------------5-delete grade-------------------------------------
 export const DeleteGrade= async (req,res,next) => {
@@ -100,7 +100,7 @@ export const DeleteGrade= async (req,res,next) => {
     const { gradeId } =req.params
         const grade = await Grade.findByIdAndDelete(gradeId);
         if (!grade) {
-          return next(new AppErorr(message.grade.notFound, 404));
+          return next(new AppError (message.grade.notFound, 404));
         }
        //send response
        return res.status(200).json({

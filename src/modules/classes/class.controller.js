@@ -1,5 +1,5 @@
 import { Class } from "../../../db/models/Class.model.js"
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 
 
@@ -11,7 +11,7 @@ export const CreateClass=async(req,res,next) =>{
      //check existance
      const ClassExist=await Class.findOne({name})
      if(ClassExist){
-        return next( new AppErorr(message.class.alreadyExist,409))
+        return next( new AppError (message.class.alreadyExist,409))
      }
     //prepare data
      const clas= new Class({
@@ -21,7 +21,7 @@ export const CreateClass=async(req,res,next) =>{
      //add to db
      const createdClass=await clas.save()
      if(!createdClass){
-        return next(new AppErorr(message.class.fileToCreate,500))
+        return next(new AppError (message.class.fileToCreate,500))
      }
      return res.status(201).json({message:message.class.createsuccessfully,
         success:true,
@@ -38,12 +38,12 @@ export const updateclass= async (req,res,next) => {
         //check existance
         const classExist= await Class.findById(classId)
         if(!classExist){
-            return next( new AppErorr(message.class.notFound,404))
+            return next( new AppError (message.class.notFound,404))
         }
         //check name existance
         const nameExist= await Class.findOne({name})
         if(nameExist){
-            return next( new AppErorr(message.class.alreadyExist,409))
+            return next( new AppError (message.class.alreadyExist,409))
         }
         // prepare data
         classExist.name = name || classExist.name;
@@ -52,7 +52,7 @@ export const updateclass= async (req,res,next) => {
         //update  to db
         const updateclass= await classExist.save()
         if(!updateclass){
-            return next( new AppErorr(message.class.fileToUpdate,500))
+            return next( new AppError (message.class.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -74,7 +74,7 @@ export const getspecificclass= async (req,res,next) => {
     const classs=await Class.findById(classId).select("_id name")
     classs?
     res.status(200).json({message:"get successfully", success:true,data:classs})
-        : next (new AppErorr(message.class.notFound,404))
+        : next (new AppError (message.class.notFound,404))
 }
 //-------------5-deleteclass-------------------------------------
 export const Deleteclass= async (req,res,next) => {
@@ -82,7 +82,7 @@ export const Deleteclass= async (req,res,next) => {
     const { classId } =req.params
         const clas = await Class.findByIdAndDelete(classId);
         if (!clas) {
-          return next(new AppErorr(message.class.notFound, 404));
+          return next(new AppError (message.class.notFound, 404));
         }
        //send response
        return res.status(200).json({

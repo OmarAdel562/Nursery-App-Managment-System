@@ -4,7 +4,7 @@ import { Schedule } from "../../../db/models/Schedule.model.js"
 import { Student } from "../../../db/models/Student.model.js"
 import { Teacher } from "../../../db/models/Teacher.model.js"
 import { User } from "../../../db/models/User.model.js"
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 
 
@@ -19,12 +19,12 @@ import { message } from "../../utils/constant/messages.js"
     //check existance
     const teacherExist=await Teacher.findOne({userId})
     if(teacherExist){
-       return next( new AppErorr(message.teacher.alreadyExist,409))
+       return next( new AppError (message.teacher.alreadyExist,409))
     }
      //check userexistance
      const userExist=await User.findById(userId)
      if(!userExist){
-        return next( new AppErorr(message.user.notFound,404))
+        return next( new AppError (message.user.notFound,404))
      }
      
     //prepare data
@@ -38,7 +38,7 @@ import { message } from "../../utils/constant/messages.js"
      //add to db
      const createdteacher=await teacher.save()
      if(!createdteacher){
-        return next( new AppErorr(message.teacher.fileToCreate,500))
+        return next( new AppError (message.teacher.fileToCreate,500))
      }
      return res.status(201).json({message:message.teacher.createsuccessfully,
         success:true,
@@ -55,12 +55,12 @@ import { message } from "../../utils/constant/messages.js"
         //check existance
         const teachertExist= await Teacher.findById(teacherId)
         if(!teachertExist){
-            return next( new AppErorr(message.teacher.notFound,404))
+            return next( new AppError (message.teacher.notFound,404))
         }
         //check userexistance
           const userExist=await User.findById(userId)
            if(!userExist){
-            return next( new AppErorr(message.user.notFound,404))
+            return next( new AppError (message.user.notFound,404))
           }
         // prepare data
         teachertExist.userId = userId || teachertExist.userId;
@@ -71,7 +71,7 @@ import { message } from "../../utils/constant/messages.js"
         //update  to db
         const updateteacher= await teachertExist.save()
         if(!updateteacher){
-            return next( new AppErorr(message.teacher.fileToUpdate,500))
+            return next( new AppError (message.teacher.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -92,7 +92,7 @@ import { message } from "../../utils/constant/messages.js"
     const teacher=await Teacher.findById(teacherId).populate("userId","name").select("name")
     teacher?
     res.status(200).json({message:"get successfully", success:true,data:teacher})
-        : next (new AppErorr(message.teacher.notFound,404))
+        : next (new AppError (message.teacher.notFound,404))
 }
    //-------------5-delete Teacher-------------------------------------
   export const DeleteTeacher= async (req,res,next) => {
@@ -100,7 +100,7 @@ import { message } from "../../utils/constant/messages.js"
     const { teacherId } =req.params
         const teacher = await Teacher.findByIdAndDelete(teacherId).select("name")
         if (!teacher) {
-          return next(new AppErorr(message.teacher.notFound, 404));
+          return next(new AppError (message.teacher.notFound, 404));
         }
        //send response
        return res.status(200).json({
@@ -117,7 +117,7 @@ export const getTeacherData = async (req, res, next) => {
     .populate({path: 'subjectes',select: 'name'})
     // check teacher existance
     if (!teacher) {
-        return next( new AppErorr(message.teacher.notFound,404))
+        return next( new AppError (message.teacher.notFound,404))
         }
     res.status(200).json({
         message:"get successfully",
@@ -137,12 +137,12 @@ export const getTeacherSchedule = async (req, res, next) => {
     const teacher = await Teacher.findOne({ userId: teacherId })
 
     if (!teacher) {
-        return next(new AppErorr(message.teacher.notFound, 404))
+        return next(new AppError (message.teacher.notFound, 404))
     }
     const teacherSchedule = await Schedule.findOne({ userId: teacherId }).select("image")
 
     if (!teacherSchedule) {
-        return next(new AppErorr(message.schedule.notFound, 404))
+        return next(new AppError (message.schedule.notFound, 404))
     }
     // send response
     res.status(200).json({ message:"get successfully",success: true,
@@ -154,7 +154,7 @@ export const getClassForTeacher = async (req, res, next) => {
 // check teacher existance
 const teacher = await Teacher.findOne({ userId: teacherId }).populate('classId');
 if (!teacher) {
-  return next(new AppErorr(message.teacher.notFound, 404));
+  return next(new AppError (message.teacher.notFound, 404));
 }
 
 const classId = teacher.classId._id;
@@ -164,7 +164,7 @@ const studentsInClass = await Student.find({ classId })
   .populate("userId", "name");
 
 if (studentsInClass.length === 0) {
-  return next(new AppErorr(message.student.notFound, 404));
+  return next(new AppError (message.student.notFound, 404));
 }
 
 // extract student names
@@ -185,7 +185,7 @@ export const getTeacherSubjects = async (req, res, next) => {
     // check teacher existance
     const teacher = await Teacher.findOne({ userId: teacherId }).populate("subjectes", "name");
     if (!teacher) {
-        return next(new AppErorr(message.teacher.notFound, 404))
+        return next(new AppError (message.teacher.notFound, 404))
         }
     const subjects = teacher.subjectes.map(subject => ({
         name: subject.name
@@ -199,7 +199,7 @@ export const getQuizGradesForClass = async (req, res, next) => {
     // check quiz existance
     const quiz = await Quiz.findById(quizId);
     if (!quiz) {
-        return next(new AppErorr(message.quiz.notFound, 404))
+        return next(new AppError (message.quiz.notFound, 404))
     }
     // get alluser in class
     const studentsInClass = await Student.find({ classId });

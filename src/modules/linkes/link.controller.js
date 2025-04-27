@@ -1,4 +1,4 @@
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 import { Subject } from "../../../db/models/Subject.model.js"
 import { Link } from "../../../db/models/Link.model.js"
@@ -12,12 +12,12 @@ export const addLink=async(req,res,next) =>{
      //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
      //check nameexistance
      const nameExist=await Link.findOne({name})
      if(nameExist){
-        return next( new AppErorr(message.link.alreadyExist,409))
+        return next( new AppError (message.link.alreadyExist,409))
      }
     //prepare data
     
@@ -30,7 +30,7 @@ export const addLink=async(req,res,next) =>{
      //add to db
      const createdlink=await linkk.save()
      if(!createdlink){
-        return next( new AppErorr(message.link.fileToCreate,500))
+        return next( new AppError (message.link.fileToCreate,500))
      }
      return res.status(201).json({message:message.link.createsuccessfully,
         success:true,
@@ -47,17 +47,17 @@ export const updateLink= async (req,res,next) => {
         //check existance
         const linkExist= await Link.findById(linkId)
         if(!linkExist){
-            return next( new AppErorr(message.link.notFound,404))
+            return next( new AppError (message.link.notFound,404))
         }
         //check nameexistance
         const nameExist= await Link.findOne({name,_id:{$ne:linkId }})
         if(nameExist){
-            return next( new AppErorr(message.link.alreadyExist,404))
+            return next( new AppError (message.link.alreadyExist,404))
         }
         //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
         // prepare data
         linkExist.name = name || linkExist.name;
@@ -69,7 +69,7 @@ export const updateLink= async (req,res,next) => {
         //update  to db
         const updatelink= await linkExist.save()
         if(!updatelink){
-            return next( new AppErorr(message.link.fileToUpdate,500))
+            return next( new AppError (message.link.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -91,7 +91,7 @@ export const getspecificLink= async (req,res,next) => {
     const link=await Link.findById(linkId).select('-createdBy -createdAt -updatedAt -__v')   
     link?
     res.status(200).json({message:"get successfully", success:true,data:link})
-        : next (new AppErorr(message.link.notFound,404))
+        : next (new AppError (message.link.notFound,404))
 }
 //-------------5-delete Link-------------------------------------
 export const DeleteLink= async (req,res,next) => {
@@ -99,7 +99,7 @@ export const DeleteLink= async (req,res,next) => {
     const { linkId } =req.params
         const link = await Link.findByIdAndDelete(linkId);
         if (!link) {
-          return next(new AppErorr(message.link.notFound, 404));
+          return next(new AppError (message.link.notFound, 404));
         }
        //send response
        return res.status(200).json({

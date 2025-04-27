@@ -1,8 +1,12 @@
 import { deleteCloudFile } from "./cloud.js"
 import { deleteCloud } from "./file-function.js"
 
+<<<<<<< HEAD
 
 export  class AppErorr extends Error {
+=======
+export class AppError extends Error {
+>>>>>>> 6a3c22139deb3f2bb08e336dedc436387d1984bd
     constructor(message , statusCode) {
         super (message)
         this.statusCode=statusCode
@@ -12,7 +16,7 @@ export  class AppErorr extends Error {
 export const asyncHandler=(fn) =>{
     return(req,res,next) =>{
         fn(req,res,next).catch((err) =>{
-            return next(new AppErorr(err.message,err.statusCode))
+            return next(new AppError (err.message,err.statusCode))
         })
      }
 }

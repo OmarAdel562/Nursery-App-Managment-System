@@ -1,5 +1,5 @@
 import { User } from "../../../db/models/User.model.js"
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 import { Parent } from "../../../db/models/Parent.model.js"
 import { Student } from "../../../db/models/Student.model.js"
@@ -17,17 +17,17 @@ export const addParent=async(req,res,next) =>{
     //check existance
     const parentExist=await Parent.findOne({userId})
     if(parentExist){
-       return next( new AppErorr(message.parent.alreadyExist,409))
+       return next( new AppError (message.parent.alreadyExist,409))
     }
      //check userexistance
      const userExist=await User.findById(userId)
      if(!userExist){
-        return next( new AppErorr(message.user.notFound,404))
+        return next( new AppError (message.user.notFound,404))
      }
      //check studentexistance
      const studentExist=await Student.findById(studentId)
      if(!studentExist){
-        return next( new AppErorr(message.student.notFound,404))
+        return next( new AppError (message.student.notFound,404))
      }
     //prepare data
      const parent= new Parent({
@@ -38,7 +38,7 @@ export const addParent=async(req,res,next) =>{
      //add to db
      const createdparent=await parent.save()
      if(!createdparent){
-        return next( new AppErorr(message.parent.fileToCreate,500))
+        return next( new AppError (message.parent.fileToCreate,500))
      }
      return res.status(201).json({message:message.parent.createsuccessfully,
         success:true,
@@ -53,12 +53,12 @@ export const updateParent= async (req,res,next) => {
         //check existance
         const parentExist= await Parent.findById(parentId)
         if(!parentExist){
-            return next( new AppErorr(message.parent.notFound,404))
+            return next( new AppError (message.parent.notFound,404))
         }
         //check userexistance
           const userExist=await User.findById(userId)
            if(!userExist){
-            return next( new AppErorr(message.user.notFound,404))
+            return next( new AppError (message.user.notFound,404))
           }
         // prepare data
         parentExist.userId = userId || parentExist.userId;
@@ -68,7 +68,7 @@ export const updateParent= async (req,res,next) => {
         //update  to db
         const updateparent= await parentExist.save()
         if(!updateparent){
-            return next( new AppErorr(message.parent.fileToUpdate,500))
+            return next( new AppError (message.parent.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -90,7 +90,7 @@ export const getspecificParent= async (req,res,next) => {
     const parent=await Parent.findById(parentId).populate("userId", "name").select(" userId name")
     parent?
     res.status(200).json({message:"get successfully", success:true,data:parent})
-        : next (new AppErorr(message.parent.notFound,404))
+        : next (new AppError (message.parent.notFound,404))
 }
 //-------------5-delete Parent-------------------------------------
 export const DeleteParent= async (req,res,next) => {
@@ -98,7 +98,7 @@ export const DeleteParent= async (req,res,next) => {
     const { parentId } =req.params
         const parent = await Parent.findByIdAndDelete(parentId);
         if (!parent) {
-          return next(new AppErorr(message.parent.notFound, 404));
+          return next(new AppError (message.parent.notFound, 404));
         }
        //send response
        return res.status(200).json({
@@ -116,7 +116,7 @@ export const getStudentGradesForParent = async (req, res, next) => {
         populate: { path: "userId", select: "name" }
     })
     if (!parent) {
-        return next(new AppErorr(message.parent.notFound, 404));
+        return next(new AppError (message.parent.notFound, 404));
     }
     const studentId = parent.studentId._id;
     // get grades
@@ -151,7 +151,7 @@ export const getStudentReportForParent = async (req, res, next) => {
         populate: { path: "userId", select: "name" } 
     })
     if (!parent) {
-        return next(new AppErorr(message.parent.notFound, 404));
+        return next(new AppError (message.parent.notFound, 404));
     }
 
     const studentId = parent.studentId._id;
@@ -179,7 +179,7 @@ export const getStudentScheduleForParent = async (req, res, next) => {
     });
 
     if (!parent) {
-        return next(new AppErorr(message.parent.notFound, 404));
+        return next(new AppError (message.parent.notFound, 404));
     }
 
     const studentId = parent.studentId.userId._id;
@@ -188,7 +188,7 @@ export const getStudentScheduleForParent = async (req, res, next) => {
     const schedule = await Schedule.findOne({ userId: studentId }).select("image ");
 
     if (!schedule) {
-        return next(new AppErorr(message.schedule.notFound, 404));
+        return next(new AppError (message.schedule.notFound, 404));
     }
 
     return res.status(200).json({
@@ -207,7 +207,7 @@ export const getParentData = async (req, res, next) => {
     .populate({path: 'userId',  select: 'profilePic name email gander phone'})
     .populate({ path: 'studentId', populate: {path: 'userId',select: 'name' } })
     if (!parent) {
-        return next(new AppErorr(message.parent.notFound, 404));
+        return next(new AppError (message.parent.notFound, 404));
     }
      //send response
     return res.status(200).json({
@@ -230,7 +230,7 @@ export const getParentNotifications = async (req, res, next) => {
     // check parent existanse
     const parent = await Parent.findOne({ userId: parentId })
     if (!parent) {
-      return next(new AppErorr(message.parent.notFound, 404))
+      return next(new AppError (message.parent.notFound, 404))
     }
   
     // get response
@@ -239,7 +239,7 @@ export const getParentNotifications = async (req, res, next) => {
     }).sort({ createdAt: -1 })
   
     if (notifications.length === 0) {
-      return next(new AppErorr(message.notification.notFound, 404))
+      return next(new AppError (message.notification.notFound, 404))
     }
   
     // send response
@@ -270,7 +270,7 @@ export const getStudentAttendanceForParent = async (req, res, next) => {
     });
 
     if (!parent || !parent.studentId || !parent.studentId.userId) {
-        return next(new AppErorr(message.parent.notFound, 404));
+        return next(new AppError (message.parent.notFound, 404));
     }
 
     const studentUserId = parent.studentId.userId._id;

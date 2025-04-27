@@ -1,4 +1,4 @@
-import { AppErorr } from "../../utils/AppError.js"
+import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 import { Subject } from "../../../db/models/Subject.model.js"
 import { Question } from "../../../db/models/Question.model.js"
@@ -12,7 +12,7 @@ export const addQuestion=async(req,res,next) =>{
      //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
 
      const questionn= new Question({
@@ -25,7 +25,7 @@ export const addQuestion=async(req,res,next) =>{
      //add to db
      const createdquestion=await questionn.save()
      if(!createdquestion){
-        return next( new AppErorr(message.question.fileToCreate,500))
+        return next( new AppError (message.question.fileToCreate,500))
      }
      return res.status(201).json({message:message.question.createsuccessfully,
         success:true,
@@ -40,12 +40,12 @@ export const updateQuestion= async (req,res,next) => {
         //check existance
         const questionExist= await Question.findById(questionId)
         if(!questionExist){
-            return next( new AppErorr(message.question.notFound,404))
+            return next( new AppError (message.question.notFound,404))
         }
         //check existance
      const subjectExist=await Subject.findById(subjectId)
      if(!subjectExist){
-        return next( new AppErorr(message.subject.notFound,404))
+        return next( new AppError (message.subject.notFound,404))
      }
         // prepare data
         questionExist.question = question || questionExist.question;
@@ -56,7 +56,7 @@ export const updateQuestion= async (req,res,next) => {
         //update  to db
         const updatequestion= await questionExist.save()
         if(!updatequestion){
-            return next( new AppErorr(message.question.fileToUpdate,500))
+            return next( new AppError (message.question.fileToUpdate,500))
         }
         //send response
         return res.status(200).json({
@@ -78,7 +78,7 @@ export const getspecificQuestion= async (req,res,next) => {
     const question=await Question.findById(questionId).select('-createdBy -createdAt -updatedAt -__v')
     question?
     res.status(200).json({message:"get successfully", success:true,data:question})
-        : next (new AppErorr(message.question.notFound,404))
+        : next (new AppError (message.question.notFound,404))
 }
 //-------------5-delete question-------------------------------------
 export const DeleteQuestion= async (req,res,next) => {
@@ -86,7 +86,7 @@ export const DeleteQuestion= async (req,res,next) => {
     const { questionId } =req.params
         const question = await  Question.findByIdAndDelete(questionId);
         if (!question) {
-          return next(new AppErorr(message.question.notFound, 404));
+          return next(new AppError (message.question.notFound, 404));
         }
        //send response
        return res.status(200).json({
