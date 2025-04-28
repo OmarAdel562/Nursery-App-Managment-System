@@ -54,7 +54,7 @@ export const markAttendance = async (req, res, next) => {
                 );
                 stream.end(file.buffer); // send buffer to the stream
             });
-            uploadedImageUrl = uploadResponse.secure_url;
+            uploadedImageUrl = result.secure_url;
         } catch (cloudinaryError) {
             console.error('Cloudinary Upload Error:', cloudinaryError.message);
             return next(new AppError('Failed to upload image. Please try again later.', 500));
@@ -152,7 +152,7 @@ export const leaveAttendance = async (req, res, next) => {
                 );
                 stream.end(file.buffer); // send buffer to the stream
             });
-            uploadedImageUrl = uploadResponse.secure_url;
+            uploadedImageUrl = result.secure_url;
         } catch (cloudinaryError) {
             console.error('Cloudinary Upload Error:', cloudinaryError.message);
             return next(new AppError('Failed to upload image. Please try again later.', 500));
