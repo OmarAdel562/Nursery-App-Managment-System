@@ -42,26 +42,25 @@ export const markAttendance = async (req, res, next) => {
         }
 
         // Step 4: Upload the uploaded image to Cloudinary
-let uploadedImageUrl;
-try {
-    const uploadResponse = await cloudinary.uploader.upload_stream;
+        let uploadedImageUrl;
+        try {
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: 'attendance_images' },
+                    (error, result) => {
+                        if (error) return reject(error);
+                        resolve(result);
+                    }
+                );
+                stream.end(file.buffer); // send buffer to the stream
+            });
 
-    const result = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-            { folder: 'attendance_images' },
-            (error, result) => {
-                if (error) return reject(error);
-                resolve(result);
-            }
-        );
-        stream.end(file.buffer); // send buffer to the stream
-    });
+            uploadedImageUrl = result.secure_url;
+        } catch (cloudinaryError) {
+            console.error('Cloudinary Upload Error:', cloudinaryError.message);
+            return next(new AppError('Failed to upload image. Please try again later.', 500));
+        }
 
-    uploadedImageUrl = result.secure_url;
-} catch (cloudinaryError) {
-    console.error('Cloudinary Upload Error:', cloudinaryError.message);
-    return next(new AppErorr('Failed to upload image. Please try again later.', 500));
-}
         // Step 5: Compare images using Face++ API
         let faceCompareResponse;
         try {
@@ -113,7 +112,7 @@ try {
         console.error('Error in markAttendance:', error.message);
         return next(new AppError(error.message || 'Internal server error', 500));
     }
-};
+}
 //---------------- Leave Attendance Controller-----------------------
 export const leaveAttendance = async (req, res, next) => {
     try {
@@ -142,26 +141,24 @@ export const leaveAttendance = async (req, res, next) => {
         }
 
         // Step 4: Upload the uploaded image to Cloudinary
-let uploadedImageUrl;
-try {
-    const uploadResponse = await cloudinary.uploader.upload_stream;
+        let uploadedImageUrl;
+        try {
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: 'attendance_images' },
+                    (error, result) => {
+                        if (error) return reject(error);
+                        resolve(result);
+                    }
+                );
+                stream.end(file.buffer); // send buffer to the stream
+            });
 
-    const result = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-            { folder: 'attendance_images' },
-            (error, result) => {
-                if (error) return reject(error);
-                resolve(result);
-            }
-        );
-        stream.end(file.buffer); // send buffer to the stream
-    });
-
-    uploadedImageUrl = result.secure_url;
-} catch (cloudinaryError) {
-    console.error('Cloudinary Upload Error:', cloudinaryError.message);
-    return next(new AppError('Failed to upload image. Please try again later.', 500));
-}
+            uploadedImageUrl = result.secure_url;
+        } catch (cloudinaryError) {
+            console.error('Cloudinary Upload Error:', cloudinaryError.message);
+            return next(new AppError('Failed to upload image. Please try again later.', 500));
+        }
 
         // Step 5: Compare images using Face++ API
         let faceCompareResponse;
