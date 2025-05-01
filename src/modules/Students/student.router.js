@@ -4,7 +4,7 @@ import { isValid } from "../../midderware/validation.js";
  import { isAuthorized } from "../../midderware/authorization.js";
  import { isAuthenticated } from "../../midderware/authentication.js";
  import { roles } from "../../utils/constant/enum.js";
-import { addStudent, DeleteStudent, getallStudent, getspecificStudent, getStudentData, getStudentGrades, getStudentGradesInSubject, getStudentNotifications, getStudentSchedule, getStudentSubjects, getStudentSubjectsWithTasks, updateStudent } from "./student.controller.js";
+import { addStudent, DeleteStudent, getallStudent, getspecificStudent, getStudentData, getStudentGradesInSubject, getStudentNotifications, getStudentSchedule, getStudentSubjects, updateStudent } from "./student.controller.js";
 import { addStudentVal, Deletestudentval, updateStudentlVal } from "./student.validation.js";
 
 
@@ -26,14 +26,14 @@ studentrouter.delete('/:studentId',isAuthenticated(),isAuthorized([roles.MANAGME
 studentrouter.get('/student/data',isAuthenticated(),isAuthorized([roles.STUDENT]),asyncHandler(getStudentData))
 //7- get-Student-schedule
 studentrouter.get('/student/schedule',isAuthenticated(),isAuthorized([roles.STUDENT]),asyncHandler(getStudentSchedule))
-//8- get-Student-grade
-studentrouter.get('/student/grade',isAuthenticated(),isAuthorized([roles.STUDENT]),asyncHandler(getStudentGrades))
+// //8- get-Student-grade
+// studentrouter.get('/student/grade',isAuthenticated(),isAuthorized([roles.STUDENT]),asyncHandler(getStudentGrades))
 //9- get-Student-subject
 studentrouter.get('/student/subject',isAuthenticated(),isAuthorized([roles.STUDENT]),asyncHandler(getStudentSubjects))
 //10- get-Student-notification
 studentrouter.get('/student/notification',isAuthenticated(),isAuthorized([roles.STUDENT]),asyncHandler(getStudentNotifications))
-//11-getStudentSubjectsWithTasks
-studentrouter.get('/student/subjectdata',isAuthenticated(),isAuthorized([roles.STUDENT]),asyncHandler(getStudentSubjectsWithTasks))
+// //11-getStudentSubjectsWithTasks
+// studentrouter.get('/student/subjectdata',isAuthenticated(),isAuthorized([roles.STUDENT]),asyncHandler(getStudentSubjectsWithTasks))
 //12-getStudentGradesInSubject
 studentrouter.get('/student/gradesinsubject/:subjectId',isAuthenticated(),isAuthorized([roles.STUDENT]),asyncHandler(getStudentGradesInSubject))
 export default studentrouter
