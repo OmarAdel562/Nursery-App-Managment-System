@@ -152,7 +152,7 @@ export const getAssigmentBySubject = async (req, res) => {
  if(!subjectExist){
     return res.status(404).json({  message:message.subject.notFound,success:false,data:{} })
  }
-    const assigment = await Assigment.find({ subjectId }).lean().select('-_id -subjectId -classId -createdBy -createdAt -updatedAt -__v')
+    const assigment = await Assigment.find({ subjectId }).lean().select(' -subjectId -classId -createdBy -createdAt -updatedAt -__v')
     if (assigment.length === 0) {
         return res.status(404).json({ message:message.assigment.notFound,success: false,data:{} });
     }

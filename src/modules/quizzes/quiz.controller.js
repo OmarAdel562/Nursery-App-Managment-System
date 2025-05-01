@@ -151,7 +151,7 @@ export const getQuizBySubject = async (req, res) => {
        if(!subjectExist){
           return res.status(404).json({ message:message.subject.notFound,success:false,data:{}  });
        }
-          const quizzes = await Quiz.find({ subjectId }).select('-_id -subjectId -questions -classId -createdBy -createdAt -updatedAt -__v')  
+          const quizzes = await Quiz.find({ subjectId }).select(' -subjectId -questions -classId -createdBy -createdAt -updatedAt -__v')  
           if (quizzes.length === 0) {
               return res.status(404).json({ message:message.quiz.notFound,success:false,data:{}  });
           }
