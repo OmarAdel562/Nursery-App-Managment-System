@@ -231,6 +231,7 @@ export const getStudentSubjects = async (req, res, next) => {
         success: true,
         data:{studentname: student.userId.name,
         subjects: student.subjectes.map(subject => ({
+            id:subject.id,
             name: subject.name,  
             description:subject.description
         }))
