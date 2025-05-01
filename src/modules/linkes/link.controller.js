@@ -115,7 +115,7 @@ export const getlinkBySubject = async (req, res) => {
        if(!subjectExist){
           return res.status(404).json({  message:message.subject.notFound,success: false,data:{} })
        }
-          const linkes = await Link.find({ subjectId }).lean().select('-createdBy -createdAt -updatedAt -__v')   
+          const linkes = await Link.find({ subjectId }).lean().select('-_id -subjectId  -createdBy -createdAt -updatedAt -__v')  
           if (linkes.length === 0) {
               return res.status(404).json({ message:message.link.notFound ,success:false, data:{} })
           }

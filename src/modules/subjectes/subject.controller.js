@@ -73,7 +73,7 @@ export const getallsubjectes= async (req,res,next) => {
 export const getspecificsubject= async (req,res,next) => {
     //get data from req
     const { subjectId } =req.params
-    const subject=await Subject.findById(subjectId).select('id -createdBy -createdAt -updatedAt -__v')
+    const subject=await Subject.findById(subjectId).select('-id -createdBy -createdAt -updatedAt -__v')
     //     .populate([
     //     {path:"materials"},
     //     {path:"assigments"},
