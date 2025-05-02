@@ -38,7 +38,7 @@ export const addQuiz=async(req,res,next) =>{
         { $match: { subjectId } }, 
         { $sample: { size: numQuestions } } 
     ])
-    if (questions.length ==! numQuestions) {
+    if (questions.length !== numQuestions) {
         return next( new AppError (message.question.notenough,400))
     }
      //prepare data
