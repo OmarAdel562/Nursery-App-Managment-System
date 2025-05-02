@@ -225,15 +225,17 @@ export const EndQuiz = async (req, res, next) => {
         if (answer) {
             const userAns = answer.selectedOption?.toString().trim().toLowerCase();
             const correctAns = question.correctAnswer?.toString().trim().toLowerCase();
+            console.log(`Question ID: ${question._id}, User Answer: ${userAns}, Correct Answer: ${correctAns}`);
             if (userAns === correctAns) {
                 score++;
             }
         }
     }
+    console.log(`Total score: ${score}`);
 
-  attempt.score = score;
-  attempt.endedAt = now;
-  await attempt.save();
+  attempt.score = score
+  attempt.endedAt = now
+  await attempt.save()
 
   res.status(201).json({
     message: "Quiz submitted successfully",
