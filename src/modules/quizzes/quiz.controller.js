@@ -220,16 +220,16 @@ export const EndQuiz = async (req, res, next) => {
   }
 
   let score = 0;
-  for (const question of quiz.questions) {
-    const answer = answers.find((ans) => ans.questionId === question._id.toString());
-    if (answer) {
-        const userAns = answer.selectedOption?.toString().trim().toLowerCase();
-        const correctAns = question.correctAnswer?.toString().trim().toLowerCase();
-        if (userAns === correctAns) {
-          score++;
+    for (const question of quiz.questions) {
+        const answer = answers.find((ans) => ans.questionId === question._id.toString());
+        if (answer) {
+            const userAns = answer.selectedOption?.toString().trim().toLowerCase();
+            const correctAns = question.correctAnswer?.toString().trim().toLowerCase();
+            if (userAns === correctAns) {
+                score++;
+            }
         }
     }
-  }
 
   attempt.score = score;
   attempt.endedAt = now;
