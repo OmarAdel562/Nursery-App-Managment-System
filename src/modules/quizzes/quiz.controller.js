@@ -6,6 +6,7 @@ import { Question } from "../../../db/models/Question.model.js"
 import { QuizAttempts } from "../../../db/models/QuizAttempts.model.js"
 import { Class } from "../../../db/models/Class.model.js"
 import { Student } from "../../../db/models/Student.model.js"
+import mongoose from "mongoose"
 
 
 //-------------------------- quiz----------------------
@@ -35,10 +36,9 @@ export const addQuiz=async(req,res,next) =>{
         return next(new AppError (message.question.notenough, 404))
     }
     const questions = await Question.aggregate([
-        { $match: { subjectId } }, 
+        { $match: { subjectId: new mongoose.Types.ObjectId(subjectId)  } }, 
         { $sample: { size: numQuestions } } 
     ])
-    console.log("Found questions:", questions.length);
     if (questions.length !== numQuestions) {
         return next( new AppError (message.question.notenough,400))
     }
@@ -222,8 +222,12 @@ export const EndQuiz = async (req, res, next) => {
   let score = 0;
   for (const question of quiz.questions) {
     const answer = answers.find((ans) => ans.questionId === question._id.toString());
-    if (answer && answer.selectedOption === question.correctAnswer) {
-      score++;
+    if (answer) {
+        const userAns = answer.selectedOption?.toString().trim().toLowerCase();
+        const correctAns = question.correctAnswer?.toString().trim().toLowerCase();
+        if (userAns === correctAns) {
+          score++;
+        }
     }
   }
 
