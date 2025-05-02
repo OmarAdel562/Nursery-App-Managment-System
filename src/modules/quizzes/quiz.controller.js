@@ -30,9 +30,9 @@ export const addQuiz=async(req,res,next) =>{
     if (numQuestions <= 0) {
         return next( new AppError (message.question.must,400))
     }
-    const totalQuestions = await Question.countDocuments();
+    const totalQuestions = await Question.countDocuments({ subjectId })
     if (totalQuestions < numQuestions) {
-        return next(new AppError (message.question.notenough, 404));
+        return next(new AppError (message.question.notenough, 404))
     }
     const questions = await Question.aggregate([
         { $match: { subjectId } }, 
