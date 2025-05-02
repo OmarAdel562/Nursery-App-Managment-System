@@ -38,6 +38,7 @@ export const addQuiz=async(req,res,next) =>{
         { $match: { subjectId } }, 
         { $sample: { size: numQuestions } } 
     ])
+    console.log("Found questions:", questions.length);
     if (questions.length !== numQuestions) {
         return next( new AppError (message.question.notenough,400))
     }
