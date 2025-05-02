@@ -195,7 +195,11 @@ export const EndQuiz = async (req, res, next) => {
   const { answers } = req.body
   const studentId = req.authUser._id
 
-  const quiz = await Quiz.findById(quizId).populate("questions")
+  const quiz = await Quiz.findById(quizId)
+  .populate({
+    path: 'questions',
+    select: 'question options correctAnswer'
+  })
   if (!quiz) {
     return next(new AppError(message.question.notFound, 404))
   }
