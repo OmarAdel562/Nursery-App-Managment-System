@@ -26,5 +26,5 @@ export const DeleteQuizval=joi.object({
 
 export const startQuizval=joi.object({
     quizId:generalFields.objectId,
-    studentId:generalFields.objectId
+    //studentId:generalFields.objectId
 })
