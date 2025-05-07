@@ -27,6 +27,7 @@ export const analyzePronunciation = async (req, res) => {
 
     // Call the pronunciation API
     const apiUrl = 'https://92.112.192.9:5000/upload_audio'; // Replace with your actual API URL
+    console.log('Sending request to API with form data:', formData);
 
     const response = await axios.post(apiUrl, formData, {
       headers: {
@@ -34,6 +35,7 @@ export const analyzePronunciation = async (req, res) => {
         ...formData.getHeaders() // تأكد من إرسال الـ headers الخاصة بـ FormData
       }
     });
+    console.log('API Response:', response.data);
 
     // Return the API response to the client
     return res.status(200).json({
@@ -48,9 +50,24 @@ export const analyzePronunciation = async (req, res) => {
     
   } catch (error) {
     console.error('Error processing pronunciation analysis:', error);
+    
+    // Check if the error is a response from the API
+    if (error.response) {
+      console.error('Error response from API:', error.response.data);
+      // Return the API's error response if available
+      return res.status(error.response.status).json({
+        status: 'error',
+        message: error.response.data.message || 'Failed to process pronunciation analysis',
+        details: error.response.data // Log the error details from the API
+      });
+    }
+
+    // If there's no response from the API, log the error message
+    console.error('Error message:', error.message);
     return res.status(500).json({ 
       status: 'error', 
-      message: 'Failed to process pronunciation analysis' 
+      message: 'Failed to process pronunciation analysis',
+      details: error.message // Provide the error message in the response
     });
   }
 }
@@ -100,6 +117,14 @@ export const analyzePronunciation = async (req, res) => {
     
 //   } catch (error) {
 //     console.error('Error processing pronunciation analysis:', error);
+//     return res.status(500).json({ 
+//       status: 'error', 
+//       message: 'Failed to process pronunciation analysis' 
+//     });
+//   }
+// }
+
+// console.error('Error processing pronunciation analysis:', error);
 //     return res.status(500).json({ 
 //       status: 'error', 
 //       message: 'Failed to process pronunciation analysis' 
