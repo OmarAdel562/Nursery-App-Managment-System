@@ -73,13 +73,14 @@ export const getallsubjectes= async (req,res,next) => {
 export const getspecificsubject= async (req,res,next) => {
     //get data from req
     const { subjectId } =req.params
-    const subject=await Subject.findById(subjectId).populate([
-        {path:"materials"},
-        {path:"assigments"},
-        {path:"links"},
-        {path:"quiz"},
-        {path:"grade"},
-    ])
+    const subject=await Subject.findById(subjectId).select('-id -createdBy -createdAt -updatedAt -__v')
+    //     .populate([
+    //     {path:"materials"},
+    //     {path:"assigments"},
+    //     {path:"links"},
+    //     {path:"quiz"},
+    //     {path:"grade"},
+    // ])
     subject?
     res.status(200).json({ message:"get successfully",success:true,data:subject})
     : next (new AppError (message.subject.notFound,404))

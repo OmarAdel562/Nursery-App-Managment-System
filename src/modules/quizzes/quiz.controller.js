@@ -6,6 +6,7 @@ import { Question } from "../../../db/models/Question.model.js"
 import { QuizAttempts } from "../../../db/models/QuizAttempts.model.js"
 import { Class } from "../../../db/models/Class.model.js"
 import { Student } from "../../../db/models/Student.model.js"
+import mongoose from "mongoose"
 
 
 //-------------------------- quiz----------------------
@@ -30,18 +31,17 @@ export const addQuiz=async(req,res,next) =>{
     if (numQuestions <= 0) {
         return next( new AppError (message.question.must,400))
     }
-        const totalQuestions = await Question.countDocuments();
-
+    const totalQuestions = await Question.countDocuments({ subjectId })
     if (totalQuestions < numQuestions) {
-        return next(new AppError (message.question.notenough, 404));
+        return next(new AppError (message.question.notenough, 404))
     }
-    
-    const questions = await Question.aggregate([ 
+    const questions = await Question.aggregate([
+        { $match: { subjectId: new mongoose.Types.ObjectId(subjectId)  } }, 
         { $sample: { size: numQuestions } } 
     ])
-    // if (questions.length ==! numQuestions) {
-    //     return next( new AppError (message.question.notenough,400))
-    // }
+    if (questions.length !== numQuestions) {
+        return next( new AppError (message.question.notenough,400))
+    }
      //prepare data
     const newQuiz = new Quiz({
         title,
@@ -151,7 +151,7 @@ export const getQuizBySubject = async (req, res) => {
        if(!subjectExist){
           return res.status(404).json({ message:message.subject.notFound,success:false,data:{}  });
        }
-          const quizzes = await Quiz.find({ subjectId }).select('-createdBy -createdAt -updatedAt -__v')   
+          const quizzes = await Quiz.find({ subjectId }).select(' -subjectId -questions -classId -createdBy -createdAt -updatedAt -__v')  
           if (quizzes.length === 0) {
               return res.status(404).json({ message:message.quiz.notFound,success:false,data:{}  });
           }
@@ -159,49 +159,94 @@ export const getQuizBySubject = async (req, res) => {
 } 
 // -----------------------7- start quiz--------------
 export const startQuiz = async (req, res, next) => {
-    const { studentId, quizId } = req.body;
+    const {  quizId } = req.body
+    const studentId = req.authUser._id
     // checkexistance
-    const quiz = await Quiz.findById(quizId)
+    const quiz = await Quiz.findById(quizId).populate("questions")
     if (!quiz) {
         return next(new AppError (message.quiz.notFound, 404));
     }
+    const existingAttempt = await QuizAttempts.findOne({ studentId, quizId });
+  if (existingAttempt) {
+    return res.status(400).json({ message: "Quiz already started", success: false });
+  }
     //  
     const newAttempt = new QuizAttempts({
         studentId,
         quizId,
         startedAt: new Date()
-    });
-     await newAttempt.save();
-    res.status(200).json({ message: "quiz is starte  ", data:{attemptId: newAttempt._id} });
+    })
+     await newAttempt.save()
+     const questions = quiz.questions.map((q) => ({
+        _id: q._id,
+        question: q.question,
+        options: q.options,
+      }))
+    res.status(200).json({ message: "quiz is starte  ", data:{attemptId: newAttempt._id,
+        quiz: {
+          _id: quiz._id,
+          title: quiz.title,
+          duration: quiz.duration,
+          questions}} })
 }
 //----------8-end quiz-------------------------
 export const EndQuiz = async (req, res, next) => {
     const { quizId } = req.params
-    const { answers } = req.body
-    const studentId = req.authUser._id
-  
-    const quiz = await Quiz.findById(quizId).populate("questions");
-    if (!quiz) {
-      return next(new AppError (message.question.notFound, 404));
-    }
-    let score = 0;
-    for (const question of quiz.questions) {
-      const answer = answers.find(ans => ans.questionId === question._id.toString());
-      if (answer && answer.selectedOption === question.correctAnswer) {
-        score++;
-      }
-    }
-    const attempt = await QuizAttempts.create({
-      studentId,
-      quizId,
-      score
-    });
-    res.status(201).json({
-      message: "Quiz submitted successfully",
-      success: true,
-      data: {
-        score,
-        total: quiz.questions.length
-      }
+  const { answers } = req.body
+  const studentId = req.authUser._id
+
+  const quiz = await Quiz.findById(quizId)
+  .populate({
+    path: 'questions',
+    select: 'question options correctAnswer'
+  })
+  if (!quiz) {
+    return next(new AppError(message.question.notFound, 404))
+  }
+
+  const attempt = await QuizAttempts.findOne({ studentId, quizId })
+  if (!attempt) {
+    return res.status(404).json({ message: "Quiz attempt not found", success: false })
+  }
+
+  if (attempt.endedAt) {
+    return res.status(400).json({ message: "Quiz already submitted", success: false })
+  }
+
+  // check time
+  const now = new Date()
+  const quizEndTime = new Date(attempt.startedAt.getTime() + quiz.duration * 60000)
+  if (now > quizEndTime) {
+    return res.status(400).json({
+      message: "Time is up. You cannot submit the quiz.",
+      success: false
     })
+  }
+
+  let score = 0;
+    for (const question of quiz.questions) {
+        const answer = answers.find((ans) => ans.questionId === question._id.toString());
+        if (answer) {
+            const userAns = answer.selectedOption?.toString().trim().toLowerCase();
+            const correctAns = question.correctAnswer?.toString().trim().toLowerCase();
+            console.log(`Question ID: ${question._id}, User Answer: ${userAns}, Correct Answer: ${correctAns}`);
+            if (userAns === correctAns) {
+                score++;
+            }
+        }
+    }
+    console.log(`Total score: ${score}`);
+
+  attempt.score = score
+  attempt.endedAt = now
+  await attempt.save()
+
+  res.status(201).json({
+    message: "Quiz submitted successfully",
+    success: true,
+    data: {
+      score,
+      total: quiz.questions.length,
+    },
+  })
 }

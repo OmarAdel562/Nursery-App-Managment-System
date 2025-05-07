@@ -14,7 +14,7 @@ export const upload = multer({ storage });
 // Utility to validate ObjectId
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
-// Mark Attendance Controller
+// -----------Mark Attendance Controller--------------
 export const markAttendance = async (req, res, next) => {
     try {
         const { userId } = req.body;
@@ -44,17 +44,18 @@ export const markAttendance = async (req, res, next) => {
         // Step 4: Upload the uploaded image to Cloudinary
         let uploadedImageUrl;
         try {
-            const uploadResponse = await cloudinary.uploader.upload_stream({
-                    folder: 'attendance_images',
-                },
-                (error, result) => {
-                    if (error) {
-                        throw error;
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: 'attendance_images' },
+                    (error, result) => {
+                        if (error) return reject(error);
+                        resolve(result);
                     }
-                    return result;
-                }
-            ).end(file.buffer); // Use file buffer for upload
-            uploadedImageUrl = uploadResponse.secure_url;
+                );
+                stream.end(file.buffer); // send buffer to the stream
+            });
+
+            uploadedImageUrl = result.secure_url;
         } catch (cloudinaryError) {
             console.error('Cloudinary Upload Error:', cloudinaryError.message);
             return next(new AppError('Failed to upload image. Please try again later.', 500));
@@ -111,8 +112,8 @@ export const markAttendance = async (req, res, next) => {
         console.error('Error in markAttendance:', error.message);
         return next(new AppError(error.message || 'Internal server error', 500));
     }
-};
-// Leave Attendance Controller
+}
+//---------------- Leave Attendance Controller-----------------------
 export const leaveAttendance = async (req, res, next) => {
     try {
         const { userId } = req.body;
@@ -142,17 +143,18 @@ export const leaveAttendance = async (req, res, next) => {
         // Step 4: Upload the uploaded image to Cloudinary
         let uploadedImageUrl;
         try {
-            const uploadResponse = await cloudinary.uploader.upload_stream({
-                    folder: 'attendance_images',
-                },
-                (error, result) => {
-                    if (error) {
-                        throw error;
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: 'attendance_images' },
+                    (error, result) => {
+                        if (error) return reject(error);
+                        resolve(result);
                     }
-                    return result;
-                }
-            ).end(file.buffer); // Use file buffer for upload
-            uploadedImageUrl = uploadResponse.secure_url;
+                );
+                stream.end(file.buffer); // send buffer to the stream
+            });
+
+            uploadedImageUrl = result.secure_url;
         } catch (cloudinaryError) {
             console.error('Cloudinary Upload Error:', cloudinaryError.message);
             return next(new AppError('Failed to upload image. Please try again later.', 500));

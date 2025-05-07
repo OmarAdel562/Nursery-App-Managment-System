@@ -158,64 +158,64 @@ export const getStudentSchedule = async (req, res, next) => {
     })
 }
 //------------------8-get-student-grades----------------
-export const getStudentGrades = async (req, res, next) => {
-    const studentId = req.authUser._id;
-    // check student existance
-    const student = await Student.findOne({ userId: studentId }).populate("userId", "name");
-    if (!student) {
-        return next(new AppError (message.student.notFound, 404));
-    }
+// export const getStudentGrades = async (req, res, next) => {
+//     const studentId = req.authUser._id;
+//     // check student existance
+//     const student = await Student.findOne({ userId: studentId }).populate("userId", "name");
+//     if (!student) {
+//         return next(new AppError (message.student.notFound, 404));
+//     }
 
-    // get data
-    const grades = await Grade.find({ studentId: student._id })
-        .populate("subjectId", "name")
-        .populate("quizId", "title")
-        .populate("assigmentId", "name")
-        .select("score max_score subjectId quizId assigmentId");
+//     // get data
+//     const grades = await Grade.find({ studentId: student._id })
+//         .populate("subjectId", "name")
+//         .populate("quizId", "title")
+//         .populate("assigmentId", "name")
+//         .select("score max_score subjectId quizId assigmentId");
 
-    if (grades.length === 0) {
-        return next(new AppError (message.grade.notFound, 404));
-    }
+//     if (grades.length === 0) {
+//         return next(new AppError (message.grade.notFound, 404));
+//     }
 
-    // restructure response
-    const groupedGrades = {};
+//     // restructure response
+//     const groupedGrades = {};
 
-    grades.forEach((grade) => {
-        const subjectName = grade.subjectId?.name || "Unknown Subject";
+//     grades.forEach((grade) => {
+//         const subjectName = grade.subjectId?.name || "Unknown Subject";
 
-        if (!groupedGrades[subjectName]) {
-            groupedGrades[subjectName] = [];
-        }
+//         if (!groupedGrades[subjectName]) {
+//             groupedGrades[subjectName] = [];
+//         }
 
-        if (grade.quizId) {
-            groupedGrades[subjectName].push({
-                type: "quiz",
-                title: grade.quizId.title,
-                score: grade.score,
-                max_score: grade.max_score
-            });
-        } else if (grade.assigmentId) {
-            groupedGrades[subjectName].push({
-                type: "assignment",
-                title: grade.assigmentId.name,
-                score: grade.score,
-                max_score: grade.max_score
-            });
-        }
-    });
+//         if (grade.quizId) {
+//             groupedGrades[subjectName].push({
+//                 type: "quiz",
+//                 title: grade.quizId.title,
+//                 score: grade.score,
+//                 max_score: grade.max_score
+//             });
+//         } else if (grade.assigmentId) {
+//             groupedGrades[subjectName].push({
+//                 type: "assignment",
+//                 title: grade.assigmentId.name,
+//                 score: grade.score,
+//                 max_score: grade.max_score
+//             });
+//         }
+//     });
 
-    // convert to array
-    const formattedData = Object.entries(groupedGrades).map(([subject, grades]) => ({
-        subject,
-        grades
-    }));
+//     // convert to array
+//     const formattedData = Object.entries(groupedGrades).map(([subject, grades]) => ({
+//         subject,
+//         grades
+//     }));
 
-    res.status(200).json({
-        message: "get successfully",
-        success: true,
-        data: {studentname: student.userId.name,formattedData}
-    })
-}
+//     res.status(200).json({
+//         message: "get successfully",
+//         success: true,
+//         data: {studentname: student.userId.name,formattedData}
+//     })
+// }
 //------------------9-get-student-subjectes--------------
 export const getStudentSubjects = async (req, res, next) => {
     
@@ -231,6 +231,7 @@ export const getStudentSubjects = async (req, res, next) => {
         success: true,
         data:{studentname: student.userId.name,
         subjects: student.subjectes.map(subject => ({
+            id:subject.id,
             name: subject.name,  
             description:subject.description
         }))
@@ -270,35 +271,35 @@ export const getStudentNotifications = async (req, res, next) => {
   })
 }
 //-------------------------11-getStudentSubjectsWithTasks----
-export const getStudentSubjectsWithTasks = async (req, res, next) => {
-    const student = await Student.findOne({ userId: req.authUser._id }).populate("subjectes");
-     // check student existance
-  if (!student) {
-    return next(new AppError (message.student.notFound, 404))
-  }
+// export const getStudentSubjectsWithTasks = async (req, res, next) => {
+//     const student = await Student.findOne({ userId: req.authUser._id }).populate("subjectes");
+//      // check student existance
+//   if (!student) {
+//     return next(new AppError (message.student.notFound, 404))
+//   }
   
-    const response = [];
+//     const response = [];
   
-    for (const subject of student.subjectes) {
-      const [quizzes, links, materials, assigments, grades] = await Promise.all([
-        Quiz.find({ subjectId: subject._id, classId: student.classId }),
-        Link.find({ subjectId: subject._id }),
-        Material.find({ subjectId: subject._id, classId: student.classId }),
-        Assigment.find({ subjectId: subject._id, classId: student.classId }),
-        Grade.find({ studentId: student._id, subjectId: subject._id }),
-      ])
-      response.push({
-        subjectId: subject._id,
-        subjectName: subject.name,
-        quizzes,
-        links,
-        materials,
-        assigments,
-        grades,
-      })
-    }
-    return res.status(200).json({success: true, data: response })
-}
+//     for (const subject of student.subjectes) {
+//       const [quizzes, links, materials, assigments, grades] = await Promise.all([
+//         Quiz.find({ subjectId: subject._id, classId: student.classId }),
+//         Link.find({ subjectId: subject._id }),
+//         Material.find({ subjectId: subject._id, classId: student.classId }),
+//         Assigment.find({ subjectId: subject._id, classId: student.classId }),
+//         Grade.find({ studentId: student._id, subjectId: subject._id }),
+//       ])
+//       response.push({
+//         subjectId: subject._id,
+//         subjectName: subject.name,
+//         quizzes,
+//         links,
+//         materials,
+//         assigments,
+//         grades,
+//       })
+//     }
+//     return res.status(200).json({success: true, data: response })
+// }
 //--------------------------12-getStudentGradesInSubject------------
 export const getStudentGradesInSubject = async (req, res, next) => {
   const { subjectId } = req.params

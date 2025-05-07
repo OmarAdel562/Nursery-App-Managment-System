@@ -11,16 +11,16 @@ import { Createsubject, Deletesubject, getallsubjectes, getspecificsubject, upda
 
 const subjectrouter=Router()
 
-//----------------1-user-----------------
-//1- addclass
+//----------------1-subject-----------------
+//1- add subject
 subjectrouter.post('/addsubject',isAuthenticated(),isAuthorized([roles.MANAGMENT]),isValid(addsubjectVal),asyncHandler(Createsubject))
-//2-updateclass
+//2-update subject
 subjectrouter.put('/:subjectId',isAuthenticated(),isAuthorized([roles.MANAGMENT]),isValid(updatesubjectVal),asyncHandler(updatesubject))
-//get allclass
+//get all subject
 subjectrouter.get('/',isAuthenticated(),isAuthorized([roles.MANAGMENT]), asyncHandler(getallsubjectes))
-//4-get specific class
-subjectrouter.get('/:subjectId',isAuthenticated(),isAuthorized([roles.MANAGMENT]), asyncHandler(getspecificsubject))
-//4-delete specific class
+//4-get specific subject
+subjectrouter.get('/:subjectId',isAuthenticated(),isAuthorized([roles.MANAGMENT,roles.STUDENT]), asyncHandler(getspecificsubject))
+//4-delete specific subject
 subjectrouter.delete('/:subjectId',isAuthenticated(),isAuthorized([roles.MANAGMENT]),isValid(Deletesubjectval), asyncHandler(Deletesubject))
 
 

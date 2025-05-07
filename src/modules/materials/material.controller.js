@@ -158,7 +158,7 @@ export const getMatriaalBySubject = async (req, res) => {
  if(!subjectExist){
     return res.status(404).json({  message:message.subject.notFound,success: false,data:{} })
  }
-    const material = await Material.find({ subjectId }).lean().select('-createdBy -createdAt -updatedAt -__v')
+    const material = await Material.find({ subjectId }).lean().select(' -subjectId -classId -createdBy -createdAt -updatedAt -__v')
     if (material.length === 0) {
         return res.status(404).json({  message:message.material.notFound, success:false,data:{}});
     }

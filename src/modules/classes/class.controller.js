@@ -2,7 +2,6 @@ import { Class } from "../../../db/models/Class.model.js"
 import { AppError  } from "../../utils/AppError.js"
 import { message } from "../../utils/constant/messages.js"
 
-
 //------------------------------------------classes----------------------------------------------------
 //------------1-create class-------
 export const CreateClass=async(req,res,next) =>{

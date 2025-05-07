@@ -29,8 +29,11 @@ export const addQuestion=async(req,res,next) =>{
      }
      return res.status(201).json({message:message.question.createsuccessfully,
         success:true,
-        data:createdquestion})
-
+        data:[{_id: createdquestion._id,
+            question: createdquestion.question,
+            options: createdquestion.options,
+            correctAnswer: createdquestion.correctAnswer,
+            subjectId: createdquestion.subjectId,}]})
 }
 //---------------2-update question---------------
 export const updateQuestion= async (req,res,next) => {
