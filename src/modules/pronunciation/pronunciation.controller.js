@@ -31,4 +31,4 @@ export const analyzePronunciation = async (req, res, next) => {
     console.error('Error uploading to Cloudinary or calling analysis API:', error);
     return res.status(500).json({ status: 'error', message: 'Failed to process audio analysis' });
   }
-};
+}

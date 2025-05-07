@@ -11,7 +11,7 @@ import { Attendance } from "../../../db/models/Attendance.model.js"
 
 //-------------------------- Parent----------------------
 //--------------------------1-add Parent------------------------
-export const addParent=async(req,res,next) =>{
+export const addParent=async(req,res,next) =>{A
     //get data from req
     const {userId , studentId}=req.body
     //check existance
@@ -43,7 +43,6 @@ export const addParent=async(req,res,next) =>{
      return res.status(201).json({message:message.parent.createsuccessfully,
         success:true,
         data:createdparent})
-
 }
 //---------------2-update Parent---------------
 export const updateParent= async (req,res,next) => {
