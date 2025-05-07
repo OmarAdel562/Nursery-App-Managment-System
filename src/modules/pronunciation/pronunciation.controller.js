@@ -1,34 +1,55 @@
 import axios from 'axios';
-import cloudinary from 'cloudinary';
 
-export const analyzePronunciation = async (req, res, next) => {
-  const { word,lang } = req.body;
-  const audioFile = req.files.audio; // Assuming your audio file field is named 'audio'
-
-  if (!audioFile || !word || !lang) {
-    return res.status(400).json({ status: 'error', message: 'An audio file and a word are required' });
-  }
+export const analyzePronunciation = async (req, res) => {
   try {
-    // Upload the audio file to Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(audioFile.tempFilePath, {
-      resource_type: 'audio', // Specify that it's an audio file
+    // Get the text, language from request body
+    const { word, lang } = req.body;
+    
+    // Check if required fields exist
+    if (!req.files || !req.files.audio || !word || !lang) {
+      return res.status(400).json({ 
+        status: 'error', 
+        message: 'Missing required fields. Please provide text, language, and audio file.' 
+      });
+    }
+    
+    const audioFile = req.files.audio;
+    
+    // Create form data for the API call
+    const formData = new FormData();
+    formData.append('text', word);
+    formData.append('language', lang === 'en' ? 'en' : 'ar');
+    
+    // Convert the uploaded file to a format suitable for axios
+    const fileBuffer = audioFile.data;
+    const blob = new Blob([fileBuffer], { type: audioFile.mimetype });
+    formData.append('file', blob, audioFile.name);
+    
+    // Call the pronunciation API
+    const apiUrl = 'https://92.112.192.9:5000/upload_audio'; // Replace with your actual API URL
+    
+    const response = await axios.post(apiUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
     });
-
-    const audio_url = uploadResult.secure_url;
-
-    // Call your pronunciation analysis API
-    const response = await axios.post('http://localhost:5000/analyze', {
-      audio_url,
-      word,
-      lang,
-    });
-
+    
+    // Return the API response to the client
     return res.status(200).json({
-      status: 'success',
-      result: response.data.result,
+      status: response.data.status,
+      target_text: response.data.target_text,
+      user_text: response.data.user_text,
+      accuracy: response.data.accuracy,
+      feedback: response.data.feedback,
+      recording_url: response.data.recording_url,
+      correct_pronunciation_url: response.data.correct_pronunciation_url
     });
+    
   } catch (error) {
-    console.error('Error uploading to Cloudinary or calling analysis API:', error);
-    return res.status(500).json({ status: 'error', message: 'Failed to process audio analysis' });
+    console.error('Error processing pronunciation analysis:', error);
+    return res.status(500).json({ 
+      status: 'error', 
+      message: 'Failed to process pronunciation analysis' 
+    });
   }
 }
