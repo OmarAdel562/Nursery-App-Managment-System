@@ -6,7 +6,6 @@ export const analyzePronunciation = async (req, res) => {
   try {
     // Get the text, language from request body
     const { word, lang } = req.body;
-
     // Check if required fields exist
     if (!req.file || !word || !lang) {  
       return res.status(400).json({ 
@@ -14,27 +13,21 @@ export const analyzePronunciation = async (req, res) => {
         message: 'Missing required fields. Please provide word, language, and audio file.' 
       });
     }
-
     const audioFile = req.file;  
-
     // Create form data for the API call
     const formData = new FormData();
     formData.append('text', word);
     formData.append('language', lang === 'en' ? 'en' : 'ar');
-
     // Convert the uploaded file to a format suitable for axios
     formData.append('file', audioFile.buffer, audioFile.originalname);
-
     // Call the pronunciation API
     const apiUrl = 'http://92.112.192.9:5000/upload_audio'; 
-
     const response = await axios.post(apiUrl, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         ...formData.getHeaders() 
       }
     });
-
     // Return the API response to the client
     return res.status(200).json({
       status: response.data.status,
@@ -45,10 +38,8 @@ export const analyzePronunciation = async (req, res) => {
       recording_url: response.data.recording_url,
       correct_pronunciation_url: response.data.correct_pronunciation_url
     });
-    
   } catch (error) {
     console.error('Error processing pronunciation analysis:', error);
-    
     // Check if the error is a response from the API
     if (error.response) {
       console.error('Error response from API:', error.response.data);
@@ -59,7 +50,6 @@ export const analyzePronunciation = async (req, res) => {
         details: error.response.data // Log the error details from the API
       });
     }
-
     // If there's no response from the API, log the error message
     console.error('Error message:', error.message);
     return res.status(500).json({ 
