@@ -198,12 +198,12 @@ try {
 
         const createdLeave = await attendance.save();
         if (!createdLeave) {
-            return next(new AppError("fileToCreate leave", 500));
+            return next(new AppError("Failed to create leave record", 500));
         }
 
         // Step 8: Send a success response
         return res.status(201).json({
-            message: "Leave createsuccessfully",
+            message: "Leave created successfully",
             success: true,
             data: createdLeave,
         });
