@@ -75,7 +75,7 @@ export const markAttendance = async (req, res, next) => {
         let faceCompareResponse;
         try {
             faceCompareResponse = await axios.post(
-                'https://api-us.faceplusplus.com/facepp/v3/compare',
+                'http://api-us.faceplusplus.com/facepp/v3/compare',
                 null,
                 {
                     params: {
