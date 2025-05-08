@@ -73,24 +73,26 @@ export const markAttendance = async (req, res, next) => {
         // Step 5: Compare images using Face++ API
         console.log('Comparing images using Face++ API...');
         let faceCompareResponse;
-        try {
-            faceCompareResponse = await axios.post(
-                'http://api-us.faceplusplus.com/facepp/v3/compare',
-                null,
-                {
-                    params: {
-                        api_key: process.env.FACE_API_KEY,
-                        api_secret: process.env.FACE_API_SECRET,
-                        image_url1: studentImageUrl, // Profile picture
-                        image_url2: uploadedImageUrl, // Cloudinary URL of the uploaded image
-                    },
-                }
-            );
-            console.log('Face++ API Response:', faceCompareResponse.data);
-        } catch (apiError) {
-            console.error('Face++ API Error:', apiError.response?.data || apiError.message);
-            return next(new AppError('Failed to compare faces. Please try again later.', 500));
-        }
+try {
+  faceCompareResponse = await axios.post(
+    'https://api-us.faceplusplus.com/facepp/v3/compare',
+    null,
+    {
+      params: {
+        api_key: process.env.FACE_API_KEY,
+        api_secret: process.env.FACE_API_SECRET,
+        image_url1: studentImageUrl,
+        image_url2: uploadedImageUrl,
+      },
+    }
+  );
+  console.log('Face++ API Response:', faceCompareResponse.data);
+} catch (apiError) {
+  const errorData = apiError?.response?.data;
+  const apiMessage = errorData?.error_message || apiError.message || 'Unknown error';
+  console.error('Face++ API Error:', apiMessage);
+  return next(new AppError(`Face++ API Error: ${apiMessage}`, 500));
+}
 
         // Step 6: Process the response from Face++
         const { confidence, thresholds } = faceCompareResponse.data;
