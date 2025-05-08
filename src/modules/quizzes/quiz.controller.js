@@ -159,7 +159,7 @@ export const getQuizBySubject = async (req, res) => {
 } 
 // -----------------------7- start quiz--------------
 export const startQuiz = async (req, res, next) => {
-    const {  quizId } = req.body
+    const {  quizId } = req.params
     const studentId = req.authUser._id
     // checkexistance
     const quiz = await Quiz.findById(quizId).populate("questions")

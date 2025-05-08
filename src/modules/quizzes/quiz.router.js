@@ -26,7 +26,7 @@ quizrouter.delete('/:quizId',isAuthenticated(),isAuthorized([roles.TEACHER]),isV
 //6- getquizBySubject
 quizrouter.get('/subject/:subjectId',asyncHandler(getQuizBySubject))
 //7- startquiz
-quizrouter.post('/startquiz',isAuthenticated(),isAuthorized([roles.STUDENT]),isValid(startQuizval),asyncHandler(startQuiz))
+quizrouter.post('/startquiz/:quizId',isAuthenticated(),isAuthorized([roles.STUDENT]),isValid(startQuizval),asyncHandler(startQuiz))
 //8- ebdquiz
 quizrouter.post('/endquiz/:quizId',isAuthenticated(),isAuthorized([roles.STUDENT]),asyncHandler(EndQuiz))
 
