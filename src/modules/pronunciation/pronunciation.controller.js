@@ -1,5 +1,5 @@
 import axios from 'axios';
-import FormData from 'form-data';  // تأكد من استيراد FormData
+import FormData from 'form-data';  
 
 
 export const analyzePronunciation = async (req, res) => {
@@ -8,14 +8,14 @@ export const analyzePronunciation = async (req, res) => {
     const { word, lang } = req.body;
 
     // Check if required fields exist
-    if (!req.file || !word || !lang) {  // استخدم req.file بدلاً من req.files
+    if (!req.file || !word || !lang) {  
       return res.status(400).json({ 
         status: 'error', 
         message: 'Missing required fields. Please provide word, language, and audio file.' 
       });
     }
 
-    const audioFile = req.file;  // استخدم req.file للحصول على الملف المرفق
+    const audioFile = req.file;  
 
     // Create form data for the API call
     const formData = new FormData();
@@ -26,12 +26,12 @@ export const analyzePronunciation = async (req, res) => {
     formData.append('file', audioFile.buffer, audioFile.originalname);
 
     // Call the pronunciation API
-    const apiUrl = 'http://92.112.192.9:5000/upload_audio'; // Replace with your actual API URL
+    const apiUrl = 'http://92.112.192.9:5000/upload_audio'; 
 
     const response = await axios.post(apiUrl, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        ...formData.getHeaders() // تأكد من إرسال الـ headers الخاصة بـ FormData
+        ...formData.getHeaders() 
       }
     });
 
