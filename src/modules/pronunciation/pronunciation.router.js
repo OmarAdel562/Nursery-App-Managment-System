@@ -15,9 +15,9 @@ const pronunciationrouter=Router()
 //----------------1-AnalyzePronunciation-----------------
 //1- create message
 pronunciationrouter.post('/analyze',
-  //  isAuthenticated(),
+    isAuthenticated(),
     upload.single('audio'),
-  //  isAuthorized([roles.STUDENT]),
+    isAuthorized([roles.STUDENT]),
     asyncHandler(analyzePronunciation))
 
 export default pronunciationrouter
