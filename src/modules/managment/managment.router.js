@@ -15,13 +15,13 @@ const userrouter=Router()
 //1- adduser
 userrouter.post('/adduser',cloudUploadd({}).single('profilePic'),isValid(adduserVal),asyncHandler(adduser))
 //2-updateuser
-userrouter.put('/:userId',cloudUploadd({}).single('profilePic'),isValid(updateuserVal),asyncHandler(updateuser))
+userrouter.put('/:userId',isAuthenticated(),isAuthorized([roles.MANAGMENT]),cloudUploadd({}).single('profilePic'),isValid(updateuserVal),asyncHandler(updateuser))
 //3-get allusers 
-userrouter.get('/', asyncHandler(getallusers))
+userrouter.get('/',isAuthenticated(),isAuthorized([roles.MANAGMENT]), asyncHandler(getallusers))
 //4-get specific user
-userrouter.get('/:userId', asyncHandler(getspecificuser))
+userrouter.get('/:userId',isAuthenticated(),isAuthorized([roles.MANAGMENT]), asyncHandler(getspecificuser))
 //5-delete specific user
-userrouter.delete('/:userId',isValid(Deleteuserval), asyncHandler(Deleteuser))
+userrouter.delete('/:userId',isAuthenticated(),isAuthorized([roles.MANAGMENT]),isValid(Deleteuserval), asyncHandler(Deleteuser))
 //6- get  user profile
 userrouter.get('/mana/profiledata',isAuthenticated(),asyncHandler(getUserprofile))
 //---------------2-signin and logout---------------------
