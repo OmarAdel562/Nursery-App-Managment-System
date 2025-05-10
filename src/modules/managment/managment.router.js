@@ -15,7 +15,7 @@ const userrouter=Router()
 //1- adduser
 userrouter.post('/adduser',cloudUploadd({}).single('profilePic'),isValid(adduserVal),asyncHandler(adduser))
 //2-updateuser
-userrouter.put('/:userId',cloudUploadd({}).single('profilePic'),isValid(updateuserVal),asyncHandler(updateuser))
+userrouter.put('/:userId', cloudUploadd({}).single('profilePic'),isValid(updateuserVal),asyncHandler(updateuser))
 //3-get allusers 
 userrouter.get('/',asyncHandler(getallusers))
 //4-get specific user
