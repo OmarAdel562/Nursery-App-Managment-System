@@ -182,7 +182,7 @@ export const startQuiz = async (req, res, next) => {
         question: q.question,
         options: q.options,
       }))
-    res.status(200).json({ message: "quiz is starte  ", data:{attemptId: newAttempt._id,
+    res.status(200).json({ message: "quiz is starte  ",success:true, data:{attemptId: newAttempt._id,
         quiz: {
           _id: quiz._id,
           title: quiz.title,
